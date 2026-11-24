@@ -1,48 +1,2026 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Perkalian &amp; Pembagian Dasar</title>
-  <meta name="description" content="Belajar perkalian dan pembagian dasar secara interaktif.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✖️</text></svg>">
-  <style>
-    :root { --bg: #f5f7fb; --fg: #1f2937; --accent: #2563eb; }
-    @media (prefers-color-scheme: dark) {
-      :root { --bg: #111827; --fg: #e5e7eb; --accent: #60a5fa; }
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; margin: 0; background: var(--bg); color: var(--fg);
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-    #app { position: fixed; inset: 0; width: 100%; height: 100%; border: 0; background: #fff; }
-    #loading { position: fixed; inset: 0; display: flex; flex-direction: column;
-      align-items: center; justify-content: center; gap: 14px; background: var(--bg);
-      transition: opacity .3s; z-index: 2; }
-    #loading.hide { opacity: 0; pointer-events: none; }
-    .spinner { width: 40px; height: 40px; border: 4px solid rgba(128,128,128,.3);
-      border-top-color: var(--accent); border-radius: 50%; animation: spin .9s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-    a.fallback { color: var(--accent); font-size: 14px; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perkalian Matematika Dasar</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome untuk Ikon Kalkulator, Medali & UI -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #FEF08A 0%, #BAE6FD 45%, #A7F3D0 100%);
+            min-height: 100vh;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .font-mono-calc {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .bg-pattern {
+            background-image: radial-gradient(#0284c722 2px, transparent 2px);
+            background-size: 24px 24px;
+        }
+        .calc-btn {
+            transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.15s ease;
+            box-shadow: 0 4px 0 #cbd5e1;
+        }
+        .calc-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #cbd5e1;
+        }
+        .calc-btn-clear {
+            box-shadow: 0 4px 0 #fda4af;
+        }
+        .calc-btn-clear:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #fda4af;
+        }
+        .calc-btn-enter {
+            box-shadow: 0 4px 0 #047857;
+        }
+        .calc-btn-enter:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #047857;
+        }
+        @keyframes girlJumpCheer {
+            0%, 100% { transform: translateY(0) rotate(-3deg); }
+            50% { transform: translateY(-10px) rotate(4deg); }
+        }
+        @keyframes boyCryWobble {
+            0%, 100% { transform: translateX(0) rotate(0deg); }
+            25% { transform: translateX(-4px) rotate(-4deg); }
+            75% { transform: translateX(4px) rotate(4deg); }
+        }
+        .animate-girl-cheer {
+            animation: girlJumpCheer 0.45s ease-in-out infinite;
+        }
+        .animate-boy-cry {
+            animation: boyCryWobble 0.35s ease-in-out infinite;
+        }
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8;
+            border-radius: 9999px;
+        }
+    </style>
 </head>
-<body>
-  <div id="loading">
-    <div class="spinner"></div>
-    <div>Memuat Perkalian &amp; Pembagian Dasar…</div>
-    <a class="fallback" href="https://script.google.com/macros/s/AKfycbxXi7waJB2ZMeheiXaEj6uyDhRo9So1Ne_03ylJyBKR7Ac2Culg4V--1s-_u7GjPQ7mmw/exec" target="_blank" rel="noopener">Buka langsung jika tidak muncul</a>
-  </div>
+<body class="bg-pattern text-slate-800 flex flex-col justify-between min-h-screen overflow-x-hidden">
 
-  <iframe
-    id="app"
-    title="Perkalian dan Pembagian Dasar"
-    src="https://script.google.com/macros/s/AKfycbxXi7waJB2ZMeheiXaEj6uyDhRo9So1Ne_03ylJyBKR7Ac2Culg4V--1s-_u7GjPQ7mmw/exec"
-    allow="fullscreen"
-    referrerpolicy="no-referrer"></iframe>
+    <!-- ==================== HEADER & TOMBOL POJOK KANAN ATAS ==================== -->
+    <header class="w-full px-3 sm:px-6 pt-3 pb-2 flex items-center justify-between gap-2 z-20">
+        <div class="flex items-center gap-2 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-sm border border-sky-100">
+            <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white shadow-sm">
+                <i class="fa-solid fa-calculator text-sm"></i>
+            </div>
+            <div>
+                <h1 class="text-sm sm:text-base font-extrabold text-slate-800 leading-tight">Perkalian & Pembagian Dasar</h1>
+                <p class="text-[11px] font-semibold text-emerald-700 hidden sm:block">Edisi Kuliner Khas Bogor • Kelas X</p>
+            </div>
+        </div>
 
-  <script>
-    document.getElementById('app').addEventListener('load', function () {
-      document.getElementById('loading').classList.add('hide');
-    });
-  </script>
+        <div class="flex items-center gap-1.5 sm:gap-2">
+            <button onclick="openHistoryModal('ranking')" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-xs px-2.5 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5 border border-amber-500/30">
+                <i class="fa-solid fa-trophy text-amber-800"></i>
+                <span>Top 10</span>
+            </button>
+            <button onclick="openHistoryModal('history')" class="bg-white/95 hover:bg-sky-50 text-sky-800 font-bold text-xs px-2.5 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5 border border-sky-200">
+                <i class="fa-solid fa-clock-rotate-left text-sky-600"></i>
+                <span>Riwayat Saya</span>
+            </button>
+            <button onclick="openTeacherLoginModal()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-2.5 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5">
+                <i class="fa-solid fa-chalkboard-user text-emerald-400"></i>
+                <span>Guru</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- ==================== KONTEN UTAMA ==================== -->
+    <main class="flex-1 flex items-center justify-center px-3 py-4">
+
+        <!-- 1. LAYAR MULAI -->
+        <section id="startScreen" class="w-full max-w-md bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border-2 border-white p-6 sm:p-7">
+            <div class="text-center mb-5">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white text-3xl shadow-md mb-3">
+                    <i class="fa-solid fa-bowl-food"></i>
+                </div>
+                <h2 class="text-2xl font-extrabold text-slate-800">Matematika Dasar</h2>
+                <p class="text-xs sm:text-sm text-slate-500 mt-1">
+                    Jawab soal sebanyak-banyaknya dalam <span class="font-bold text-sky-600">10 Menit</span> (5 detik/soal) dan kumpulkan kuliner khas Bogor!
+                </p>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                        <i class="fa-solid fa-sliders text-amber-500 mr-1"></i> Pilih Materi Latihan
+                    </label>
+                    <div class="grid grid-cols-2 gap-2.5">
+                        <button type="button" id="modeBtnMultiply" onclick="selectOperationMode('multiply')"
+                            class="py-2.5 px-3 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-xs">
+                            <i class="fa-solid fa-xmark text-emerald-600"></i>
+                            <span>Perkalian (×)</span>
+                        </button>
+                        <button type="button" id="modeBtnDivide" onclick="selectOperationMode('divide')"
+                            class="py-2.5 px-3 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition">
+                            <i class="fa-solid fa-divide text-sky-600"></i>
+                            <span>Pembagian (÷)</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div>
+                    <label for="studentNameInput" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                        <i class="fa-solid fa-user text-sky-500 mr-1"></i> Nama Lengkap Siswa
+                    </label>
+                    <input type="text" id="studentNameInput" placeholder="Contoh: Raka Pratama" maxlength="35"
+                        class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-sky-500 focus:bg-white focus:outline-none font-semibold text-slate-800 transition">
+                </div>
+
+                <div>
+                    <label for="studentClassInput" class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+                        <i class="fa-solid fa-graduation-cap text-emerald-500 mr-1"></i> Kelas
+                    </label>
+                    <input type="text" id="studentClassInput" placeholder="CONTOH: X-1 ATAU X-A" maxlength="6" inputmode="text"
+                        autocapitalize="characters" autocomplete="off" oninput="this.value = formatClassInput(this.value)"
+                        class="w-full px-4 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-emerald-500 focus:bg-white focus:outline-none font-semibold uppercase text-slate-800 transition">
+                </div>
+
+                <button onclick="startGame()"
+                    class="w-full py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-sky-500 hover:from-emerald-600 hover:to-sky-600 text-white font-extrabold text-base shadow-lg shadow-emerald-500/30 transition transform active:scale-[0.98] flex items-center justify-center gap-2 mt-2">
+                    <i class="fa-solid fa-play"></i>
+                    <span>MULAI PERMAINAN</span>
+                </button>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-100">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-extrabold text-slate-600 flex items-center gap-1.5">
+                        <i class="fa-solid fa-crown text-amber-500"></i> Peringkat Teratas Saat Ini
+                    </span>
+                    <button onclick="openHistoryModal('ranking')" class="text-[11px] font-bold text-sky-600 hover:underline">
+                        Lihat Top 10 &rarr;
+                    </button>
+                </div>
+                <div id="top3PreviewContainer" class="space-y-1.5 text-xs"></div>
+            </div>
+        </section>
+
+        <!-- 2. LAYAR PERMAINAN -->
+        <section id="gameScreen" class="hidden w-full max-w-sm bg-slate-800 rounded-[2rem] shadow-2xl border-4 border-slate-700 p-4 sm:p-5 text-white">
+            <div class="bg-slate-900/90 px-3.5 py-3 rounded-2xl mb-3 border border-slate-700/80 space-y-2.5">
+                <div class="flex items-center justify-between gap-2">
+                    <div class="min-w-0">
+                        <p id="playerBadge" class="text-xs font-extrabold text-emerald-300 truncate">Siswa • Kelas X</p>
+                        <span id="gameModeBadge" class="inline-block bg-sky-500/20 text-sky-300 border border-sky-400/30 px-2 py-0.5 rounded-md text-[10px] font-bold mt-1">Perkalian (×)</span>
+                    </div>
+
+                    <div class="bg-slate-800/95 border border-amber-400/30 px-3 py-1.5 rounded-xl flex items-center gap-2 shrink-0 shadow-inner">
+                        <i class="fa-regular fa-clock text-amber-400 text-sm"></i>
+                        <div class="text-right">
+                            <span class="text-[9px] uppercase tracking-wider text-slate-400 block font-bold leading-none">Sisa Waktu</span>
+                            <div id="gameTimerDisplay" class="font-mono-calc text-base sm:text-lg font-extrabold text-amber-300 tracking-wider leading-tight mt-0.5">
+                                10:00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+                    <div class="flex items-center gap-2 text-xs font-extrabold">
+                        <span class="bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check"></i> <span id="scoreCorrect">0</span>
+                        </span>
+                        <span class="bg-rose-500/15 text-rose-400 border border-rose-500/25 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-xmark"></i> <span id="scoreWrong">0</span>
+                        </span>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 shrink-0">
+                        <button id="soundToggleBtn" onclick="toggleAudioMute()" title="Suara Aktif / Bisu" class="bg-sky-600/90 hover:bg-sky-500 text-white w-8 h-8 rounded-xl flex items-center justify-center transition shadow">
+                            <i id="soundToggleIcon" class="fa-solid fa-volume-high text-xs"></i>
+                        </button>
+                        <button id="pauseToggleBtn" onclick="togglePauseGame()" title="Jeda / Lanjutkan Permainan" class="bg-amber-500/90 hover:bg-amber-400 text-slate-900 w-8 h-8 rounded-xl flex items-center justify-center transition shadow">
+                            <i id="pauseToggleIcon" class="fa-solid fa-pause text-xs"></i>
+                        </button>
+                        <button onclick="promptRestartGame()" title="Ulang dari Awal (Tidak Tersimpan)" class="bg-indigo-500/90 hover:bg-indigo-400 text-white w-8 h-8 rounded-xl flex items-center justify-center transition shadow">
+                            <i class="fa-solid fa-rotate-right text-xs"></i>
+                        </button>
+                        <button onclick="promptStopGameEarly()" title="Hentikan Permainan (Tidak Tersimpan)" class="bg-rose-500/90 hover:bg-rose-500 text-white w-8 h-8 rounded-xl flex items-center justify-center transition shadow">
+                            <i class="fa-solid fa-stop text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="confirmRestartBanner" class="hidden bg-slate-900/95 border border-indigo-400/50 rounded-2xl p-2.5 mb-3 flex items-center justify-between gap-2 text-xs">
+                <span class="font-bold text-indigo-200">Ulang skor & waktu ke 10:00? (Progres saat ini tidak disimpan)</span>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <button onclick="executeRestartGame()" class="bg-indigo-500 hover:bg-indigo-400 text-white font-extrabold px-2.5 py-1 rounded-xl">Ya, Ulang</button>
+                    <button onclick="cancelRestartGame()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold px-2.5 py-1 rounded-xl">Batal</button>
+                </div>
+            </div>
+
+            <div id="confirmStopBanner" class="hidden bg-slate-900/95 border border-rose-400/50 rounded-2xl p-2.5 mb-3 flex items-center justify-between gap-2 text-xs">
+                <span class="font-bold text-rose-200">Hentikan permainan? Nilai tidak akan tersimpan.</span>
+                <div class="flex items-center gap-1.5 shrink-0">
+                    <button onclick="executeStopGameEarly()" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold px-2.5 py-1 rounded-xl">Ya, Hentikan</button>
+                    <button onclick="cancelStopGameEarly()" class="bg-slate-700 hover:bg-slate-600 text-slate-200 font-bold px-2.5 py-1 rounded-xl">Batal</button>
+                </div>
+            </div>
+
+            <div class="bg-[#d9ead3] text-slate-900 rounded-2xl p-4 mb-3.5 shadow-inner border-4 border-slate-600 relative overflow-hidden">
+                <div id="gamePauseOverlay" class="hidden absolute inset-0 z-10 bg-slate-900/95 text-white flex flex-col items-center justify-center p-3 text-center">
+                    <div class="w-10 h-10 rounded-full bg-amber-400/20 text-amber-300 flex items-center justify-center mb-1.5">
+                        <i class="fa-solid fa-pause text-base"></i>
+                    </div>
+                    <p class="font-extrabold text-sm tracking-wide text-amber-300">PERMAINAN DIJEDA</p>
+                    <p class="text-[11px] text-slate-300 mt-0.5 mb-2.5">Soal & waktu berhenti sementara</p>
+                    <button onclick="togglePauseGame()" class="bg-emerald-500 hover:bg-emerald-400 text-white font-extrabold text-xs px-4 py-1.5 rounded-xl shadow flex items-center gap-1.5">
+                        <i class="fa-solid fa-play"></i>
+                        <span>Lanjutkan</span>
+                    </button>
+                </div>
+
+                <div class="flex items-center justify-between text-[11px] font-bold text-slate-600 mb-1">
+                    <span><i class="fa-solid fa-stopwatch text-amber-600 mr-1"></i>Waktu Soal: <span id="questionSecondsText" class="text-slate-900 font-extrabold">5</span> dtk</span>
+                    <span class="font-mono-calc uppercase tracking-wider text-emerald-800">BOGOR-CALC</span>
+                </div>
+
+                <div class="w-full h-2 bg-slate-300/80 rounded-full overflow-hidden mb-3">
+                    <div id="questionProgressBar" class="h-full bg-emerald-600 transition-all duration-100 ease-linear" style="width: 100%;"></div>
+                </div>
+
+                <div class="flex items-center justify-between gap-2 min-h-[3.5rem]">
+                    <div id="questionDisplay" class="font-mono-calc text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">
+                        7 × 8 =
+                    </div>
+                    <div id="answerDisplay" class="font-mono-calc text-3xl sm:text-4xl font-extrabold text-emerald-800 bg-white/70 px-3 py-1 rounded-xl border-2 border-emerald-700/30 min-w-[4.5rem] text-right">
+                        ?
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-2.5">
+                <button onclick="appendDigit('7')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">7</button>
+                <button onclick="appendDigit('8')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">8</button>
+                <button onclick="appendDigit('9')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">9</button>
+
+                <button onclick="appendDigit('4')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">4</button>
+                <button onclick="appendDigit('5')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">5</button>
+                <button onclick="appendDigit('6')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">6</button>
+
+                <button onclick="appendDigit('1')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">1</button>
+                <button onclick="appendDigit('2')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">2</button>
+                <button onclick="appendDigit('3')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">3</button>
+
+                <button onclick="clearInput()" class="calc-btn-clear bg-rose-100 hover:bg-rose-200 text-rose-700 font-extrabold text-lg py-3 rounded-2xl">C</button>
+                <button onclick="appendDigit('0')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">0</button>
+                <button onclick="backspaceInput()" aria-label="Hapus satu angka" class="calc-btn bg-amber-100 hover:bg-amber-200 text-amber-800 text-xl font-extrabold py-3 rounded-2xl">
+                    <i class="fa-solid fa-delete-left"></i>
+                </button>
+
+                <button id="submitAnswerBtn" type="button" onpointerdown="handleFastSubmit(event)" onclick="submitAnswer()" class="calc-btn-enter col-span-3 bg-emerald-500 hover:bg-emerald-400 active:bg-emerald-600 text-white font-extrabold text-lg py-3.5 rounded-2xl mt-1 tracking-wide flex items-center justify-center gap-2 cursor-pointer touch-manipulation">
+                    <span>JAWAB</span>
+                    <i class="fa-solid fa-check"></i>
+                </button>
+            </div>
+
+            <p class="text-center text-[11px] text-slate-400 mt-3">
+                <i class="fa-solid fa-keyboard mr-1"></i> Bisa klik tombol atau ketik angka & Enter di keyboard
+            </p>
+        </section>
+
+        <!-- 3. LAYAR PENGHARGAAN -->
+        <section id="awardScreen" class="hidden w-full max-w-md bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border-2 border-amber-200 p-6 sm:p-7 text-center">
+            <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-tr from-amber-400 via-yellow-300 to-orange-400 text-amber-900 text-4xl shadow-lg mb-3 border-4 border-white">
+                <i class="fa-solid fa-award"></i>
+            </div>
+
+            <span id="awardRankBadge" class="inline-block bg-amber-100 text-amber-800 text-xs font-extrabold px-3 py-1 rounded-full mb-2">
+                Peringkat #1
+            </span>
+
+            <h2 id="awardTitle" class="text-2xl font-extrabold text-slate-800">Master Kuliner Bogor!</h2>
+            <p id="awardStudentInfo" class="text-sm font-bold text-sky-700 mt-0.5">Nama Siswa • Kelas X</p>
+
+            <div class="grid grid-cols-3 gap-2.5 my-5">
+                <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3">
+                    <span class="text-[11px] font-bold text-emerald-700 block">Benar</span>
+                    <span id="finalCorrectCount" class="text-2xl font-extrabold text-emerald-600">0</span>
+                </div>
+                <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3">
+                    <span class="text-[11px] font-bold text-rose-700 block">Salah</span>
+                    <span id="finalWrongCount" class="text-2xl font-extrabold text-rose-600">0</span>
+                </div>
+                <div class="bg-sky-50 border border-sky-200 rounded-2xl p-3">
+                    <span class="text-[11px] font-bold text-sky-700 block">Akurasi</span>
+                    <span id="finalAccuracyText" class="text-2xl font-extrabold text-sky-600">0%</span>
+                </div>
+            </div>
+
+            <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/80 rounded-2xl p-4 mb-5 relative">
+                <i class="fa-solid fa-quote-left text-amber-300 text-2xl absolute top-2.5 left-3"></i>
+                <p id="randomQuoteText" class="text-xs sm:text-sm font-semibold text-slate-700 italic px-4">
+                    "Matematika bukan tentang angka, persamaan, atau algoritma: ini adalah tentang pemahaman."
+                </p>
+                <p id="randomQuoteAuthor" class="text-[11px] font-extrabold text-amber-700 mt-1.5">— William Paul Thurston</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row gap-2.5">
+                <button onclick="openHistoryModal('ranking')" class="flex-1 py-3 rounded-2xl bg-amber-400 hover:bg-amber-500 text-slate-900 font-extrabold text-sm transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-trophy"></i>
+                    <span>Lihat Top 10</span>
+                </button>
+                <button onclick="resetToStart()" class="flex-1 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-sm transition flex items-center justify-center gap-1.5">
+                    <i class="fa-solid fa-rotate-right"></i>
+                    <span>Main Lagi</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 4. PANEL KHUSUS GURU -->
+        <section id="teacherDashboardSection" class="hidden w-full max-w-5xl bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border-2 border-slate-200 overflow-hidden flex flex-col">
+            <div class="px-5 py-4 bg-slate-900 text-white flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-400 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <div>
+                        <h2 class="font-extrabold text-base sm:text-lg">Panel Khusus Guru • Rekapitulasi Nilai Siswa</h2>
+                        <p class="text-xs text-slate-400">Kelola, filter per kelas, dan urutkan hasil latihan perkalian & pembagian</p>
+                    </div>
+                </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="refreshTeacherDashboardData()" class="bg-sky-500 hover:bg-sky-600 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm">
+                        <i id="teacherRefreshIcon" class="fa-solid fa-arrows-rotate"></i>
+                        <span>Refresh Data</span>
+                    </button>
+                    <button onclick="exportHistoryToCSV()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm">
+                        <i class="fa-solid fa-file-csv"></i>
+                        <span>Ekspor CSV</span>
+                    </button>
+                    <button onclick="promptClearAllData()" class="bg-rose-500/90 hover:bg-rose-600 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>Reset Data</span>
+                    </button>
+                    <button onclick="logoutTeacher()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Keluar</span>
+                    </button>
+                    <button onclick="closeTeacherDashboard()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition border border-slate-600">
+                        <i class="fa-solid fa-arrow-left"></i>
+                        <span>Kembali ke Beranda</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 space-y-4">
+                <div class="grid grid-cols-3 gap-3 text-center">
+                    <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-2xs">
+                        <span class="text-[11px] font-bold text-slate-500 block">Total Pengerjaan</span>
+                        <span id="teacherTotalAttempts" class="text-xl font-extrabold text-slate-800">0</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-2xs">
+                        <span class="text-[11px] font-bold text-slate-500 block">Rata-Rata Benar</span>
+                        <span id="teacherAvgCorrect" class="text-xl font-extrabold text-emerald-600">0</span>
+                    </div>
+                    <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-2xs">
+                        <span class="text-[11px] font-bold text-slate-500 block">Poin Tertinggi</span>
+                        <span id="teacherHighestScore" class="text-xl font-extrabold text-amber-600">0</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
+                    <div class="relative">
+                        <i class="fa-solid fa-magnifying-glass text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
+                        <input type="text" id="teacherSearchInput" oninput="renderTeacherTable()" placeholder="Cari nama siswa..."
+                            class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-slate-300 text-xs font-semibold text-slate-700 focus:outline-none focus:border-emerald-500">
+                    </div>
+
+                    <div class="relative">
+                        <i class="fa-solid fa-graduation-cap text-emerald-600 absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
+                        <select id="teacherClassFilter" onchange="renderTeacherTable()"
+                            class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-slate-300 text-xs font-bold text-slate-700 focus:outline-none focus:border-emerald-500">
+                            <option value="ALL">Semua Kelas</option>
+                        </select>
+                    </div>
+
+                    <div class="relative">
+                        <i class="fa-regular fa-calendar-days text-rose-500 absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
+                        <select id="teacherDateFilter" onchange="renderTeacherTable()"
+                            class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-slate-300 text-xs font-bold text-slate-700 focus:outline-none focus:border-emerald-500">
+                            <option value="ALL">Semua Hari & Tanggal</option>
+                        </select>
+                    </div>
+
+                    <div class="relative">
+                        <i class="fa-solid fa-calculator text-sky-600 absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
+                        <select id="teacherModeFilter" onchange="renderTeacherTable()"
+                            class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-slate-300 text-xs font-bold text-slate-700 focus:outline-none focus:border-emerald-500">
+                            <option value="ALL">Semua Materi (× & ÷)</option>
+                            <option value="multiply">Perkalian (×)</option>
+                            <option value="divide">Pembagian (÷)</option>
+                        </select>
+                    </div>
+
+                    <div class="relative">
+                        <i class="fa-solid fa-arrow-down-wide-short text-amber-600 absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
+                        <select id="teacherSortOrder" onchange="renderTeacherTable()"
+                            class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-slate-300 text-xs font-bold text-slate-700 focus:outline-none focus:border-emerald-500">
+                            <option value="score_desc">Urutkan: Poin Terbesar</option>
+                            <option value="score_asc">Urutkan: Poin Terkecil</option>
+                            <option value="name_asc">Urutkan: Nama (A - Z)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div id="confirmResetBanner" class="hidden bg-rose-50 border border-rose-200 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
+                    <span class="text-xs font-bold text-rose-800">Hapus seluruh riwayat & peringkat siswa di perangkat ini?</span>
+                    <div class="flex items-center gap-2">
+                        <button onclick="executeClearAllData()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-extrabold px-3 py-1.5 rounded-xl">Ya, Hapus Semua</button>
+                        <button onclick="cancelClearAllData()" class="bg-white border border-slate-300 text-slate-700 text-xs font-bold px-3 py-1.5 rounded-xl">Batal</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="p-4 sm:p-5 overflow-x-auto">
+                <table class="w-full text-left border-collapse text-xs">
+                    <thead>
+                        <tr class="border-b-2 border-slate-200 text-slate-500 uppercase tracking-wider bg-slate-50/70">
+                            <th class="py-2.5 px-3">No</th>
+                            <th class="py-2.5 px-3">Nama Siswa</th>
+                            <th class="py-2.5 px-3">Kelas</th>
+                            <th class="py-2.5 px-3">Materi</th>
+                            <th class="py-2.5 px-3 text-center">Benar (Poin)</th>
+                            <th class="py-2.5 px-3 text-center">Salah</th>
+                            <th class="py-2.5 px-3">Hari & Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="teacherTableBody" class="divide-y divide-slate-100"></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- ==================== POP-UP FEEDBACK ==================== -->
+    <div id="feedbackPopupModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div id="feedbackCard" class="w-full max-w-xs bg-white rounded-3xl shadow-2xl border-4 p-5 text-center">
+            <div id="feedbackBadge" class="inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider mb-3">
+                BENAR!
+            </div>
+
+            <div class="flex items-center justify-center gap-2 mb-3">
+                <div id="feedbackCharacterContainer" class="w-24 h-28 shrink-0 flex items-center justify-center"></div>
+                <div id="feedbackVisualContainer" class="w-28 h-28 shrink-0 rounded-2xl flex items-center justify-center p-2"></div>
+            </div>
+
+            <h3 id="feedbackItemTitle" class="text-xl font-extrabold text-slate-800 leading-snug">Soto Mie Bogor</h3>
+            <p id="feedbackItemSubtitle" class="text-xs font-medium text-slate-500 mt-1 px-1">Segarnya kuah risoles & daging khas Bogor!</p>
+
+            <div id="feedbackAnswerBox" class="mt-3 pt-2.5 border-t border-slate-100">
+                <span id="feedbackAnswerLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Jawaban Sebenarnya</span>
+                <div id="feedbackAnswerValue" class="font-mono-calc text-base font-extrabold text-slate-800 bg-slate-100 px-3 py-1 rounded-xl inline-block mt-1">
+                    7 × 8 = 56
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL RANKING & RIWAYAT ==================== -->
+    <div id="historyModal" class="hidden fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
+        <div class="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[85vh]">
+            <div class="px-5 py-4 bg-slate-800 text-white flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-ranking-star text-amber-400 text-lg"></i>
+                    <h3 class="font-extrabold text-base">Papan Skor & Riwayat</h3>
+                </div>
+                <button onclick="closeHistoryModal()" class="w-8 h-8 rounded-xl bg-slate-700 hover:bg-slate-600 flex items-center justify-center text-slate-200">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-2 bg-slate-100 p-1.5 gap-1.5 border-b border-slate-200">
+                <button id="tabBtnRanking" onclick="switchHistoryTab('ranking')" class="py-2 rounded-xl font-extrabold text-xs transition bg-white text-slate-800 shadow-xs">
+                    <i class="fa-solid fa-trophy text-amber-500 mr-1"></i> Ranking 1 - 10
+                </button>
+                <button id="tabBtnHistory" onclick="switchHistoryTab('history')" class="py-2 rounded-xl font-extrabold text-xs transition text-slate-600 hover:text-slate-800">
+                    <i class="fa-solid fa-clock-rotate-left text-sky-600 mr-1"></i> Riwayat Saya
+                </button>
+            </div>
+
+            <div id="historyModalBody" class="p-4 overflow-y-auto flex-1 space-y-2.5"></div>
+        </div>
+    </div>
+
+    <!-- ==================== MODAL LOGIN GURU ==================== -->
+    <div id="teacherLoginModal" class="hidden fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
+        <div class="w-full max-w-sm bg-white rounded-3xl shadow-2xl border border-slate-200 p-6">
+            <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-2xl bg-slate-800 text-emerald-400 flex items-center justify-center">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-extrabold text-slate-800 text-base">Akses Khusus Guru</h3>
+                        <p class="text-xs text-slate-500">Masukkan kata sandi pengajar</p>
+                    </div>
+                </div>
+                <button onclick="closeTeacherLoginModal()" class="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="space-y-4">
+                <div>
+                    <label for="teacherPasswordInput" class="block text-xs font-bold text-slate-600 mb-1.5">Kata Sandi Guru</label>
+                    <div class="relative">
+                        <input type="password" id="teacherPasswordInput" placeholder="Masukkan kata sandi..."
+                            onkeydown="if(event.key === 'Enter') verifyTeacherLogin()"
+                            class="w-full pl-4 pr-11 py-3 rounded-2xl bg-slate-50 border-2 border-slate-200 focus:border-slate-800 focus:bg-white focus:outline-none font-semibold text-slate-800">
+                        <button type="button" onclick="toggleTeacherPasswordVisibility()" aria-label="Lihat atau sembunyikan password"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-800 p-1.5">
+                            <i id="teacherEyeIcon" class="fa-solid fa-eye"></i>
+                        </button>
+                    </div>
+                    <p id="teacherLoginError" class="hidden text-xs font-bold text-rose-600 mt-1.5">
+                        <i class="fa-solid fa-circle-exclamation mr-1"></i> Kata sandi salah! Silakan coba lagi.
+                    </p>
+                </div>
+
+                <button onclick="verifyTeacherLogin()" class="w-full py-3 rounded-2xl bg-slate-800 hover:bg-slate-900 text-white font-extrabold text-sm transition">
+                    Masuk ke Panel Khusus Guru
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST ==================== -->
+    <div id="toastNotification" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 border border-slate-700">
+        <i id="toastIcon" class="fa-solid fa-circle-info text-amber-400"></i>
+        <span id="toastMessage">Pesan notifikasi</span>
+    </div>
+
+    <!-- ==================== SCRIPT UTAMA ==================== -->
+    <script>
+        // --- Konstanta & Konfigurasi ---
+        // ============================================================
+        // WAJIB DIISI untuk hosting GitHub Pages:
+        // Tempel URL Web App Google Apps Script (berakhiran /exec) di bawah ini.
+        // Contoh: 'https://script.google.com/macros/s/AKfycb.../exec'
+        // ============================================================
+        const API_URL_MANUAL = '';
+        const API_URL = API_URL_MANUAL;
+        let serverErrorShown = false;
+
+        // Komunikasi ke server memakai fetch (tanpa cookie)
+        function apiGet(params) {
+            const q = new URLSearchParams(Object.assign({}, params, { t: Date.now() }));
+            return fetch(API_URL + '?' + q.toString(), { method: 'GET', credentials: 'omit', redirect: 'follow' })
+                .then(r => r.json());
+        }
+        function apiPost(payload) {
+            return fetch(API_URL, {
+                method: 'POST', credentials: 'omit', redirect: 'follow',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify(payload)
+            }).then(r => r.json());
+        }
+        const GAME_DURATION_SECONDS = 10 * 60; // 10 Menit
+        const QUESTION_DURATION_MS = 5000;     // 5 Detik per soal
+        const POPUP_DURATION_MS = 3000;        // 3 Detik pop-up feedback
+
+        // --- Data Kuliner Khas Bogor ---
+        const BOGOR_FOODS = [
+            {
+                name: 'Soto Mie Bogor',
+                desc: 'Segarnya kuah risoles & daging khas Bogor!',
+                bg: 'bg-amber-50 border border-amber-200',
+                svg: `<svg viewBox="0 0 120 120" class="w-full h-full">
+                    <ellipse cx="60" cy="78" rx="44" ry="18" fill="#ea580c"/>
+                    <path d="M16 62 Q16 98 60 98 Q104 98 104 62 Z" fill="#f97316"/>
+                    <ellipse cx="60" cy="62" rx="44" ry="15" fill="#fde047"/>
+                    <path d="M32 60 Q45 52 58 60 T86 60" stroke="#fef08a" stroke-width="4" fill="none" stroke-linecap="round"/>
+                    <circle cx="46" cy="58" r="6" fill="#991b1b"/>
+                    <circle cx="72" cy="58" r="6" fill="#16a34a"/>
+                    <rect x="52" y="48" width="16" height="8" rx="3" fill="#d97706"/>
+                </svg>`
+            },
+            {
+                name: 'Lapis Bogor Sangkuriang',
+                desc: 'Lembutnya talas ungu dengan taburan keju!',
+                bg: 'bg-purple-50 border border-purple-200',
+                svg: `<svg viewBox="0 0 120 120" class="w-full h-full">
+                    <rect x="22" y="64" width="76" height="22" rx="4" fill="#7e22ce"/>
+                    <rect x="22" y="46" width="76" height="18" rx="4" fill="#facc15"/>
+                    <rect x="22" y="34" width="76" height="12" rx="4" fill="#fef08a"/>
+                    <rect x="30" y="30" width="12" height="4" rx="2" fill="#eab308"/>
+                    <rect x="52" y="29" width="14" height="4" rx="2" fill="#eab308"/>
+                    <rect x="74" y="30" width="12" height="4" rx="2" fill="#eab308"/>
+                </svg>`
+            },
+            {
+                name: 'Asinan Bogor',
+                desc: 'Pedas, asam, manis segar dengan kerupuk mie!',
+                bg: 'bg-rose-50 border border-rose-200',
+                svg: `<svg viewBox="0 0 120 120" class="w-full h-full">
+                    <path d="M20 58 Q20 96 60 96 Q100 96 100 58 Z" fill="#0284c7"/>
+                    <ellipse cx="60" cy="58" rx="40" ry="14" fill="#fb7185"/>
+                    <circle cx="45" cy="56" r="8" fill="#fef08a"/>
+                    <circle cx="72" cy="56" r="8" fill="#fde047"/>
+                    <rect x="52" y="46" width="14" height="10" rx="2" fill="#22c55e"/>
+                    <circle cx="60" cy="63" r="4" fill="#dc2626"/>
+                </svg>`
+            },
+            {
+                name: 'Roti Unyil Venus',
+                desc: 'Kecil-kecil menggoda dengan aneka rasa!',
+                bg: 'bg-orange-50 border border-orange-200',
+                svg: `<svg viewBox="0 0 120 120" class="w-full h-full">
+                    <rect x="22" y="54" width="34" height="28" rx="12" fill="#d97706"/>
+                    <rect x="64" y="54" width="34" height="28" rx="12" fill="#b45309"/>
+                    <rect x="42" y="34" width="36" height="28" rx="12" fill="#f59e0b"/>
+                    <circle cx="54" cy="44" r="2.5" fill="#451a03"/>
+                    <circle cx="66" cy="44" r="2.5" fill="#451a03"/>
+                    <circle cx="38" cy="64" r="2.5" fill="#fef08a"/>
+                    <circle cx="80" cy="64" r="2.5" fill="#451a03"/>
+                </svg>`
+            },
+            {
+                name: 'Doclang Khas Bogor',
+                desc: 'Ketupat, tahu goreng & bumbu kacang legit!',
+                bg: 'bg-emerald-50 border border-emerald-200',
+                svg: `<svg viewBox="0 0 120 120" class="w-full h-full">
+                    <ellipse cx="60" cy="78" rx="46" ry="16" fill="#e2e8f0"/>
+                    <ellipse cx="60" cy="74" rx="38" ry="12" fill="#92400e"/>
+                    <rect x="34" y="54" width="22" height="18" rx="3" fill="#fef3c7"/>
+                    <rect x="62" y="52" width="22" height="18" rx="3" fill="#fbbf24"/>
+                    <circle cx="58" cy="48" r="9" fill="#ffffff"/>
+                    <circle cx="58" cy="48" r="4" fill="#f59e0b"/>
+                </svg>`
+            }
+        ];
+
+        // --- Data Bencana & Cuaca Ekstrem Bogor ---
+        const BOGOR_DISASTERS = [
+            {
+                name: 'Hujan Petir Bogor',
+                desc: 'Waduh! Awan gelap & petir menyambar di Kota Hujan!',
+                bg: 'bg-slate-100 border border-slate-300',
+                svg: `<svg viewBox="0 0 120 120" class="w-full h-full">
+                    <path d="M32 64 H88 A18 18 0 0 0 86 28 A24 24 0 0 0 40 24 A18 18 0 0 0 32 64 Z" fill="#475569"/>
+                    <polygon points="62,56 48,80 60,80 52,104 76,74 63,74" fill="#facc15"/>
+                    <line x1="36" y1="74" x2="30" y2="92" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+                    <line x1="84" y1="74" x2="78" y2="92" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+                </svg>`
+            },
+            {
+                name: 'Banjir Bandang',
+                desc: 'Air meluap tinggi! Ayo lebih teliti menghitung!',
+                bg: 'bg-sky-50 border border-sky-200',
+                svg: `<svg viewBox="0 0 120 120" class="w-full h-full">
+                    <polygon points="60,24 28,48 92,48" fill="#dc2626"/>
+                    <rect x="36" y="48" width="48" height="34" fill="#fef3c7"/>
+                    <rect x="52" y="56" width="16" height="16" fill="#0284c7"/>
+                    <path d="M12 78 Q30 68 48 78 T84 78 T108 78 V102 H12 Z" fill="#0284c7"/>
+                    <path d="M12 88 Q30 80 48 88 T84 88 T108 88 V102 H12 Z" fill="#38bdf8"/>
+                </svg>`
+            },
+            {
+                name: 'Tanah Longsor',
+                desc: 'Tebing runtuh! Perhatikan angka perkaliannya ya!',
+                bg: 'bg-amber-50 border border-amber-300',
+                svg: `<svg viewBox="0 0 120 120" class="w-full h-full">
+                    <polygon points="16,96 16,28 58,52 98,96" fill="#78350f"/>
+                    <polygon points="16,28 42,42 26,64" fill="#15803d"/>
+                    <circle cx="66" cy="74" r="9" fill="#92400e"/>
+                    <circle cx="82" cy="84" r="11" fill="#b45309"/>
+                    <circle cx="52" cy="86" r="8" fill="#78350f"/>
+                </svg>`
+            }
+        ];
+
+        // --- Quotes Motivasi Acak ---
+        const MOTIVATION_QUOTES = [
+            { text: "Matematika bukan tentang angka, persamaan, atau algoritma: ini adalah tentang pemahaman.", author: "William Paul Thurston" },
+            { text: "Perkalian cepat adalah kunci percaya diri menaklukkan soal matematika di tingkat berikutnya!", author: "Guru Matematika SMK Bogor" },
+            { text: "Sedikit demi sedikit latihan setiap hari akan menghasilkan kehebatan yang luar biasa.", author: "Pepatah Belajar" },
+            { text: "Jangan takut salah saat berhitung, karena setiap kesalahan adalah guru terbaik menuju ketelitian.", author: "Inspirasi Siswa Kelas X" },
+            { text: "Otak yang terlatih menghitung cepat akan selalu siap menghadapi tantangan masa depan.", author: "Semangat Kota Hujan" }
+        ];
+
+        // --- Karakter Anak Perempuan (Benar) & Anak Laki-laki (Salah) ---
+        const GIRL_CHEER_SVG = `<svg viewBox="0 0 100 120" class="w-full h-full animate-girl-cheer">
+            <path d="M26 74 L74 74 L78 108 L22 108 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+            <polygon points="50,82 46,98 50,103 54,98" fill="#64748b"/>
+            <path d="M28 80 L13 56" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+            <path d="M28 80 L13 56" stroke="#cbd5e1" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            <circle cx="13" cy="56" r="4" fill="#fed7aa"/>
+            <path d="M72 80 L87 56" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+            <path d="M72 80 L87 56" stroke="#cbd5e1" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+            <circle cx="87" cy="56" r="4" fill="#fed7aa"/>
+            <path d="M24 46 C24 19 76 19 76 46 L84 82 Q50 93 16 82 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+            <path d="M30 43 C32 27 68 27 70 43" fill="#e2e8f0"/>
+            <circle cx="50" cy="48" r="20" fill="#fed7aa"/>
+            <path d="M30 44 C30 26 70 26 70 44 C70 60 61 68 50 68 C39 68 30 60 30 44 Z" fill="none" stroke="#cbd5e1" stroke-width="2.5"/>
+            <path d="M41 66 L50 71 L59 66" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
+            <path d="M39 45 Q42.5 39 46 45" stroke="#1e293b" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+            <path d="M54 45 Q57.5 39 61 45" stroke="#1e293b" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+            <circle cx="37" cy="51" r="3" fill="#fb7185" opacity="0.55"/>
+            <circle cx="63" cy="51" r="3" fill="#fb7185" opacity="0.55"/>
+            <ellipse cx="50" cy="56" rx="5" ry="6" fill="#e11d48"/>
+        </svg>`;
+
+        const BOY_CRY_SVG = `<svg viewBox="0 0 100 120" class="w-full h-full animate-boy-cry">
+            <path d="M30 76 L70 76 L74 108 L26 108 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+            <polygon points="50,76 46,96 50,101 54,96" fill="#475569"/>
+            <path d="M30 82 L35 58" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="35" cy="58" r="4" fill="#fed7aa"/>
+            <path d="M70 82 L65 58" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
+            <circle cx="65" cy="58" r="4" fill="#fed7aa"/>
+            <circle cx="50" cy="50" r="23" fill="#fed7aa"/>
+            <path d="M27 44 L29 52 L32 44 Z" fill="#1e293b"/>
+            <path d="M73 44 L71 52 L68 44 Z" fill="#1e293b"/>
+            <path d="M26 38 C26 19 74 19 74 38 Z" fill="#64748b"/>
+            <path d="M40 38 C40 21 60 21 60 38 Z" fill="#f8fafc"/>
+            <rect x="44" y="27" width="12" height="6" rx="1.5" fill="#334155"/>
+            <path d="M24 38 Q50 43 76 38 L79 42 Q50 48 21 42 Z" fill="#475569"/>
+            <path d="M36 47 L45 51" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+            <path d="M64 47 L55 51" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
+            <path d="M38 53 L34 70" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M62 53 L66 70" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round"/>
+            <path d="M42 64 Q50 56 58 64 Q50 68 42 64 Z" fill="#be123c"/>
+        </svg>`;
+
+        // --- Variabel State Permainan & Audio ---
+        let selectedMode = 'multiply';
+        let currentPlayer = { name: '', className: '' };
+        let currentFactorA = 2;
+        let currentFactorB = 2;
+        let currentOperatorSymbol = '×';
+        let currentAnswer = 4;
+        let currentInput = '';
+        let scoreCorrect = 0;
+        let scoreWrong = 0;
+        let totalTimeLeft = GAME_DURATION_SECONDS;
+
+        let gameTimerInterval = null;
+        let questionTimerInterval = null;
+        let popupTimeout = null;
+        let isProcessingPopup = false;
+        let isGamePaused = false;
+        let questionRemainingMs = QUESTION_DURATION_MS;
+        let lastQuestionTick = 0;
+
+        let audioCtx = null;
+        let masterGainNode = null;
+        let bgmInterval = null;
+        let bgmStepIndex = 0;
+        let isAudioMuted = false;
+
+        // --- Mesin Suara Web Audio API ---
+        function initAudioContext() {
+            try {
+                if (!audioCtx) {
+                    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                    audioCtx = new AudioContextClass();
+                    masterGainNode = audioCtx.createGain();
+                    masterGainNode.gain.setValueAtTime(2.0, audioCtx.currentTime);
+                    const compressor = audioCtx.createDynamicsCompressor();
+                    compressor.threshold.setValueAtTime(-12, audioCtx.currentTime);
+                    compressor.knee.setValueAtTime(10, audioCtx.currentTime);
+                    compressor.ratio.setValueAtTime(4, audioCtx.currentTime);
+                    masterGainNode.connect(compressor);
+                    compressor.connect(audioCtx.destination);
+                }
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+            } catch (e) {}
+        }
+
+        function playToneNote(freq, duration, type = 'sine', volume = 0.25, delay = 0) {
+            if (isAudioMuted) return;
+            try {
+                initAudioContext();
+                if (!audioCtx || !masterGainNode) return;
+                const startTime = audioCtx.currentTime + delay;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, startTime);
+
+                gain.gain.setValueAtTime(0.001, startTime);
+                gain.gain.exponentialRampToValueAtTime(volume, startTime + 0.015);
+                gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+
+                osc.connect(gain);
+                gain.connect(masterGainNode);
+                osc.start(startTime);
+                osc.stop(startTime + duration + 0.02);
+            } catch (e) {}
+        }
+
+        function toggleAudioMute() {
+            isAudioMuted = !isAudioMuted;
+            const icon = document.getElementById('soundToggleIcon');
+            const btn = document.getElementById('soundToggleBtn');
+            if (isAudioMuted) {
+                icon.className = 'fa-solid fa-volume-xmark text-xs';
+                btn.className = 'bg-slate-600 hover:bg-slate-500 text-slate-200 w-8 h-8 rounded-xl flex items-center justify-center transition shadow';
+                stopBgmLoop();
+            } else {
+                icon.className = 'fa-solid fa-volume-high text-xs';
+                btn.className = 'bg-sky-600/90 hover:bg-sky-500 text-white w-8 h-8 rounded-xl flex items-center justify-center transition shadow';
+                if (!document.getElementById('gameScreen').classList.contains('hidden') && !isGamePaused) {
+                    initAudioContext();
+                    startBgmLoop();
+                }
+            }
+        }
+
+        function startBgmLoop() {
+            stopBgmLoop();
+            if (isAudioMuted) return;
+            const melodyNotes = [
+                392.00, 440.00, 493.88, 523.25, 493.88, 440.00, 392.00, 329.63,
+                392.00, 523.25, 493.88, 440.00, 392.00, 329.63, 293.66, 392.00
+            ];
+            bgmStepIndex = 0;
+            bgmInterval = setInterval(() => {
+                if (isAudioMuted || isGamePaused || document.getElementById('gameScreen').classList.contains('hidden')) return;
+                const idx = bgmStepIndex % melodyNotes.length;
+                const baseFreq = melodyNotes[idx];
+                playToneNote(baseFreq, 0.22, 'triangle', 0.52, 0);
+                playToneNote(baseFreq * 2, 0.16, 'sine', 0.28, 0);
+                bgmStepIndex++;
+            }, 340);
+        }
+
+        function stopBgmLoop() {
+            if (bgmInterval) {
+                clearInterval(bgmInterval);
+                bgmInterval = null;
+            }
+        }
+
+        function playClapBurst(delayOffset = 0) {
+            if (isAudioMuted) return;
+            try {
+                initAudioContext();
+                if (!audioCtx || !masterGainNode) return;
+                const bufferSize = Math.floor(audioCtx.sampleRate * 0.12);
+                const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+                const data = noiseBuffer.getChannelData(0);
+                for (let i = 0; i < bufferSize; i++) {
+                    data[i] = (Math.random() * 2 - 1) * Math.exp(-i / (bufferSize * 0.28));
+                }
+                const noise = audioCtx.createBufferSource();
+                noise.buffer = noiseBuffer;
+
+                const filter = audioCtx.createBiquadFilter();
+                filter.type = 'bandpass';
+                filter.frequency.setValueAtTime(1400, audioCtx.currentTime + delayOffset);
+                filter.Q.setValueAtTime(1.2, audioCtx.currentTime + delayOffset);
+
+                const gain = audioCtx.createGain();
+                gain.gain.setValueAtTime(0.45, audioCtx.currentTime + delayOffset);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + delayOffset + 0.12);
+
+                noise.connect(filter);
+                filter.connect(gain);
+                gain.connect(masterGainNode);
+                noise.start(audioCtx.currentTime + delayOffset);
+            } catch (e) {}
+        }
+
+        function playCorrectCheerSound() {
+            if (isAudioMuted) return;
+            playToneNote(523.25, 0.16, 'triangle', 0.35, 0.00);
+            playToneNote(659.25, 0.16, 'triangle', 0.35, 0.10);
+            playToneNote(783.99, 0.18, 'triangle', 0.38, 0.20);
+            playToneNote(1046.50, 0.42, 'sine', 0.42, 0.30);
+            playClapBurst(0.08);
+            playClapBurst(0.24);
+            playClapBurst(0.40);
+        }
+
+        function playWrongTetotSound() {
+            if (isAudioMuted) return;
+            playToneNote(220.00, 0.22, 'sawtooth', 0.34, 0.00);
+            playToneNote(146.83, 0.48, 'sawtooth', 0.38, 0.24);
+        }
+
+        function playGameFinishSound() {
+            if (isAudioMuted) return;
+            const notes = [523.25, 659.25, 783.99, 1046.50, 783.99, 1046.50];
+            notes.forEach((n, idx) => {
+                playToneNote(n, 0.22, 'triangle', 0.35, idx * 0.14);
+            });
+            playClapBurst(0.2);
+            playClapBurst(0.45);
+            playClapBurst(0.7);
+        }
+
+        // --- Format Kelas: contoh X-1 / X-A ---
+        function formatClassInput(value) {
+            const v = String(value).toUpperCase().replace(/[^A-Z0-9-]/g, '');
+            const m = v.match(/^([IVX]*)(-?)(.*)$/);
+            const roman = m[1];
+            if (!roman) return '';
+            const hasHyphen = m[2] === '-';
+            const rest = m[3].replace(/-/g, '');
+            if (!rest) return hasHyphen ? roman + '-' : roman;
+            let suffix = '';
+            if (/^[0-9]/.test(rest)) suffix = rest.match(/^[0-9]{1,2}/)[0];
+            else if (/^[A-Z]/.test(rest)) suffix = rest[0];
+            return suffix ? `${roman}-${suffix}` : (hasHyphen ? roman + '-' : roman);
+        }
+
+        // --- Pemilihan Mode ---
+        function selectOperationMode(mode) {
+            selectedMode = mode;
+            const btnMul = document.getElementById('modeBtnMultiply');
+            const btnDiv = document.getElementById('modeBtnDivide');
+
+            if (mode === 'multiply') {
+                btnMul.className = 'py-2.5 px-3 rounded-2xl border-2 border-emerald-500 bg-emerald-50 text-emerald-800 font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-xs';
+                btnDiv.className = 'py-2.5 px-3 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition';
+            } else {
+                btnDiv.className = 'py-2.5 px-3 rounded-2xl border-2 border-sky-500 bg-sky-50 text-sky-800 font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition shadow-xs';
+                btnMul.className = 'py-2.5 px-3 rounded-2xl border-2 border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 font-extrabold text-xs sm:text-sm flex items-center justify-center gap-2 transition';
+            }
+        }
+
+        // --- Alur Utama Permainan ---
+        function startGame() {
+            const nameVal = document.getElementById('studentNameInput').value.trim();
+            const classInputEl = document.getElementById('studentClassInput');
+            classInputEl.value = formatClassInput(classInputEl.value);
+            const classVal = classInputEl.value.trim();
+
+            if (!nameVal) {
+                showToast('Masukkan nama lengkap siswa terlebih dahulu!', 'error');
+                document.getElementById('studentNameInput').focus();
+                return;
+            }
+            if (!/^[IVX]+-([0-9]{1,2}|[A-Z])$/.test(classVal)) {
+                showToast('Format kelas belum sesuai. Contoh: X-1 atau X-A', 'error');
+                document.getElementById('studentClassInput').focus();
+                return;
+            }
+
+            initAudioContext();
+            currentPlayer = { name: nameVal, className: classVal };
+            scoreCorrect = 0;
+            scoreWrong = 0;
+            totalTimeLeft = GAME_DURATION_SECONDS;
+            isProcessingPopup = false;
+            isGamePaused = false;
+            updatePauseUI();
+            document.getElementById('confirmRestartBanner').classList.add('hidden');
+            document.getElementById('confirmStopBanner').classList.add('hidden');
+
+            document.getElementById('playerBadge').textContent = `${currentPlayer.name} • ${currentPlayer.className}`;
+            document.getElementById('gameModeBadge').textContent = selectedMode === 'multiply' ? 'Perkalian (×)' : 'Pembagian (÷)';
+            updateScoreUI();
+            updateGameTimerUI();
+
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('awardScreen').classList.add('hidden');
+            document.getElementById('teacherDashboardSection').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+
+            if (!isAudioMuted) startBgmLoop();
+
+            clearInterval(gameTimerInterval);
+            gameTimerInterval = setInterval(() => {
+                if (isGamePaused) return;
+                totalTimeLeft--;
+                updateGameTimerUI();
+                if (totalTimeLeft <= 0) {
+                    finishGame();
+                }
+            }, 1000);
+
+            generateNextQuestion();
+        }
+
+        // --- Kontrol Jeda & Ulang ---
+        function updatePauseUI() {
+            const pauseIcon = document.getElementById('pauseToggleIcon');
+            const pauseBtn = document.getElementById('pauseToggleBtn');
+            const pauseOverlay = document.getElementById('gamePauseOverlay');
+            if (!pauseIcon || !pauseBtn || !pauseOverlay) return;
+
+            if (isGamePaused) {
+                pauseIcon.className = 'fa-solid fa-play text-xs';
+                pauseBtn.className = 'bg-emerald-500 hover:bg-emerald-400 text-white w-8 h-8 rounded-xl flex items-center justify-center transition shadow';
+                pauseOverlay.classList.remove('hidden');
+            } else {
+                pauseIcon.className = 'fa-solid fa-pause text-xs';
+                pauseBtn.className = 'bg-amber-500/90 hover:bg-amber-400 text-slate-900 w-8 h-8 rounded-xl flex items-center justify-center transition shadow';
+                pauseOverlay.classList.add('hidden');
+            }
+        }
+
+        function togglePauseGame() {
+            if (isProcessingPopup) return;
+            isGamePaused = !isGamePaused;
+            updatePauseUI();
+
+            if (isGamePaused) {
+                stopBgmLoop();
+                showToast('Permainan dijeda sementara.', 'info');
+            } else {
+                lastQuestionTick = Date.now();
+                if (!isAudioMuted) startBgmLoop();
+                showToast('Permainan dilanjutkan!', 'success');
+            }
+        }
+
+        function promptRestartGame() {
+            document.getElementById('confirmStopBanner').classList.add('hidden');
+            document.getElementById('confirmRestartBanner').classList.remove('hidden');
+        }
+
+        function cancelRestartGame() {
+            document.getElementById('confirmRestartBanner').classList.add('hidden');
+        }
+
+        function executeRestartGame() {
+            document.getElementById('confirmRestartBanner').classList.add('hidden');
+            document.getElementById('confirmStopBanner').classList.add('hidden');
+            clearInterval(gameTimerInterval);
+            clearInterval(questionTimerInterval);
+            clearTimeout(popupTimeout);
+            document.getElementById('feedbackPopupModal').classList.add('hidden');
+
+            scoreCorrect = 0;
+            scoreWrong = 0;
+            totalTimeLeft = GAME_DURATION_SECONDS;
+            isProcessingPopup = false;
+            isGamePaused = false;
+            updatePauseUI();
+            updateScoreUI();
+            updateGameTimerUI();
+
+            if (!isAudioMuted) startBgmLoop();
+
+            gameTimerInterval = setInterval(() => {
+                if (isGamePaused) return;
+                totalTimeLeft--;
+                updateGameTimerUI();
+                if (totalTimeLeft <= 0) {
+                    finishGame();
+                }
+            }, 1000);
+
+            generateNextQuestion();
+            showToast('Permainan diulang dari awal!', 'success');
+        }
+
+        function promptStopGameEarly() {
+            document.getElementById('confirmRestartBanner').classList.add('hidden');
+            document.getElementById('confirmStopBanner').classList.remove('hidden');
+        }
+
+        function cancelStopGameEarly() {
+            document.getElementById('confirmStopBanner').classList.add('hidden');
+        }
+
+        function executeStopGameEarly() {
+            clearInterval(gameTimerInterval);
+            clearInterval(questionTimerInterval);
+            clearTimeout(popupTimeout);
+            stopBgmLoop();
+
+            scoreCorrect = 0;
+            scoreWrong = 0;
+            totalTimeLeft = GAME_DURATION_SECONDS;
+            isProcessingPopup = false;
+            isGamePaused = false;
+            updatePauseUI();
+
+            document.getElementById('confirmRestartBanner').classList.add('hidden');
+            document.getElementById('confirmStopBanner').classList.add('hidden');
+            document.getElementById('feedbackPopupModal').classList.add('hidden');
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('awardScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+
+            renderTop3Preview();
+            showToast('Permainan dihentikan. Data tidak disimpan.', 'info');
+        }
+
+        // --- Timer 5 Detik Per Soal ---
+        function startQuestionTimer() {
+            clearInterval(questionTimerInterval);
+            questionRemainingMs = QUESTION_DURATION_MS;
+            lastQuestionTick = Date.now();
+            updateQuestionTimerUI();
+
+            questionTimerInterval = setInterval(() => {
+                if (isProcessingPopup || isGamePaused) {
+                    lastQuestionTick = Date.now();
+                    return;
+                }
+                const now = Date.now();
+                const delta = now - lastQuestionTick;
+                lastQuestionTick = now;
+                questionRemainingMs -= delta;
+
+                if (questionRemainingMs <= 0) {
+                    questionRemainingMs = 0;
+                    updateQuestionTimerUI();
+                    clearInterval(questionTimerInterval);
+                    handleAnswerEvaluation(false, true);
+                } else {
+                    updateQuestionTimerUI();
+                }
+            }, 60);
+        }
+
+        function updateQuestionTimerUI() {
+            const pct = Math.max(0, Math.min(100, (questionRemainingMs / QUESTION_DURATION_MS) * 100));
+            const secsCeil = Math.max(0, Math.ceil(questionRemainingMs / 1000));
+            const bar = document.getElementById('questionProgressBar');
+            const secText = document.getElementById('questionSecondsText');
+
+            if (secText) secText.textContent = secsCeil;
+            if (bar) {
+                bar.style.width = `${pct}%`;
+                if (pct > 50) bar.className = 'h-full bg-emerald-600 transition-all duration-75 ease-linear';
+                else if (pct > 25) bar.className = 'h-full bg-amber-500 transition-all duration-75 ease-linear';
+                else bar.className = 'h-full bg-rose-600 transition-all duration-75 ease-linear';
+            }
+        }
+
+        // --- Kontrol Keypad & Keyboard ---
+        function appendDigit(digit) {
+            if (isProcessingPopup || isGamePaused) return;
+            if (currentInput.length >= 3) return;
+            if (currentInput === '0') currentInput = digit;
+            else currentInput += digit;
+            updateAnswerDisplay();
+        }
+
+        function clearInput() {
+            if (isProcessingPopup || isGamePaused) return;
+            currentInput = '';
+            updateAnswerDisplay();
+        }
+
+        function backspaceInput() {
+            if (isProcessingPopup || isGamePaused) return;
+            currentInput = currentInput.slice(0, -1);
+            updateAnswerDisplay();
+        }
+
+        function updateAnswerDisplay() {
+            const disp = document.getElementById('answerDisplay');
+            if (disp) disp.textContent = currentInput === '' ? '?' : currentInput;
+        }
+
+        let lastSubmitTimestamp = 0;
+        function handleFastSubmit(e) {
+            if (e) e.preventDefault();
+            submitAnswer();
+        }
+
+        function submitAnswer() {
+            const now = Date.now();
+            if (now - lastSubmitTimestamp < 180) return;
+            lastSubmitTimestamp = now;
+
+            if (isGamePaused) {
+                showToast('Permainan sedang dijeda. Tekan Lanjutkan dulu!', 'info');
+                return;
+            }
+            if (isProcessingPopup) {
+                if (document.getElementById('feedbackPopupModal').classList.contains('hidden')) {
+                    isProcessingPopup = false;
+                } else {
+                    return;
+                }
+            }
+            if (currentInput === '') {
+                showToast('Ketik angka jawabanmu terlebih dahulu!', 'info');
+                return;
+            }
+
+            clearInterval(questionTimerInterval);
+            const userVal = parseInt(currentInput, 10);
+            const isCorrect = userVal === currentAnswer;
+            handleAnswerEvaluation(isCorrect, false);
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('gameScreen').classList.contains('hidden')) return;
+            if (isProcessingPopup || isGamePaused) return;
+
+            if (e.key >= '0' && e.key <= '9') {
+                e.preventDefault();
+                appendDigit(e.key);
+            } else if (e.key === 'Backspace' || e.key === 'Delete') {
+                e.preventDefault();
+                backspaceInput();
+            } else if (e.key === 'Escape' || e.key.toLowerCase() === 'c') {
+                e.preventDefault();
+                clearInput();
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                submitAnswer();
+            }
+        });
+
+        // --- Pembuatan Soal & Evaluasi Jawaban ---
+        function generateNextQuestion() {
+            currentInput = '';
+            updateAnswerDisplay();
+
+            const a = Math.floor(Math.random() * 8) + 2; // 2..9
+            const b = Math.floor(Math.random() * 8) + 2; // 2..9
+
+            if (selectedMode === 'multiply') {
+                currentFactorA = a;
+                currentFactorB = b;
+                currentOperatorSymbol = '×';
+                currentAnswer = a * b;
+            } else {
+                const dividend = a * b;
+                currentFactorA = dividend;
+                currentFactorB = a;
+                currentOperatorSymbol = '÷';
+                currentAnswer = b;
+            }
+
+            document.getElementById('questionDisplay').textContent = `${currentFactorA} ${currentOperatorSymbol} ${currentFactorB} =`;
+            startQuestionTimer();
+        }
+
+        function handleAnswerEvaluation(isCorrect, isTimeout) {
+            isProcessingPopup = true;
+
+            if (isCorrect) {
+                scoreCorrect++;
+                playCorrectCheerSound();
+            } else {
+                scoreWrong++;
+                playWrongTetotSound();
+            }
+            updateScoreUI();
+
+            showFeedbackPopup(isCorrect, isTimeout);
+
+            clearTimeout(popupTimeout);
+            popupTimeout = setTimeout(() => {
+                document.getElementById('feedbackPopupModal').classList.add('hidden');
+                isProcessingPopup = false;
+                if (totalTimeLeft > 0 && !document.getElementById('gameScreen').classList.contains('hidden')) {
+                    generateNextQuestion();
+                }
+            }, POPUP_DURATION_MS);
+        }
+
+        function showFeedbackPopup(isCorrect, isTimeout) {
+            const modal = document.getElementById('feedbackPopupModal');
+            const card = document.getElementById('feedbackCard');
+            const badge = document.getElementById('feedbackBadge');
+            const charContainer = document.getElementById('feedbackCharacterContainer');
+            const visualContainer = document.getElementById('feedbackVisualContainer');
+            const itemTitle = document.getElementById('feedbackItemTitle');
+            const itemSubtitle = document.getElementById('feedbackItemSubtitle');
+            const answerLabel = document.getElementById('feedbackAnswerLabel');
+            const answerValue = document.getElementById('feedbackAnswerValue');
+
+            if (isCorrect) {
+                const food = BOGOR_FOODS[Math.floor(Math.random() * BOGOR_FOODS.length)];
+                card.className = 'w-full max-w-xs bg-white rounded-3xl shadow-2xl border-4 border-emerald-400 p-5 text-center';
+                badge.className = 'inline-block px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider mb-3 bg-emerald-100 text-emerald-800';
+                badge.textContent = 'JAWABAN BENAR • KULINER BOGOR';
+                charContainer.innerHTML = GIRL_CHEER_SVG;
+                visualContainer.className = `w-28 h-28 shrink-0 rounded-2xl flex items-center justify-center p-2 ${food.bg}`;
+                visualContainer.innerHTML = food.svg;
+                itemTitle.textContent = food.name;
+                itemSubtitle.textContent = food.desc;
+                answerLabel.textContent = 'Hasil Perhitungan Benar';
+                answerValue.className = 'font-mono-calc text-base font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-xl inline-block mt-1';
+                answerValue.textContent = `${currentFactorA} ${currentOperatorSymbol} ${currentFactorB} = ${currentAnswer}`;
+            } else {
+                const disaster = BOGOR_DISASTERS[Math.floor(Math.random() * BOGOR_DISASTERS.length)];
+                card.className = 'w-full max-w-xs bg-white rounded-3xl shadow-2xl border-4 border-rose-400 p-5 text-center';
+                badge.className = 'inline-block px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider mb-3 bg-rose-100 text-rose-800';
+                badge.textContent = isTimeout ? 'WAKTU HABIS • BENCANA BOGOR' : 'JAWABAN SALAH • BENCANA BOGOR';
+                charContainer.innerHTML = BOY_CRY_SVG;
+                visualContainer.className = `w-28 h-28 shrink-0 rounded-2xl flex items-center justify-center p-2 ${disaster.bg}`;
+                visualContainer.innerHTML = disaster.svg;
+                itemTitle.textContent = disaster.name;
+                itemSubtitle.textContent = disaster.desc;
+                answerLabel.textContent = 'Jawaban Sebenarnya';
+                answerValue.className = 'font-mono-calc text-base font-extrabold text-rose-800 bg-rose-50 border border-rose-200 px-3 py-1 rounded-xl inline-block mt-1';
+                answerValue.textContent = `${currentFactorA} ${currentOperatorSymbol} ${currentFactorB} = ${currentAnswer}`;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function updateScoreUI() {
+            document.getElementById('scoreCorrect').textContent = scoreCorrect;
+            document.getElementById('scoreWrong').textContent = scoreWrong;
+        }
+
+        function updateGameTimerUI() {
+            const mins = Math.floor(Math.max(0, totalTimeLeft) / 60);
+            const secs = Math.max(0, totalTimeLeft) % 60;
+            document.getElementById('gameTimerDisplay').textContent =
+                `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        function finishGame() {
+            if (totalTimeLeft > 0) return;
+
+            clearInterval(gameTimerInterval);
+            clearInterval(questionTimerInterval);
+            clearTimeout(popupTimeout);
+            stopBgmLoop();
+            isProcessingPopup = false;
+            isGamePaused = false;
+            updatePauseUI();
+            document.getElementById('confirmRestartBanner').classList.add('hidden');
+            document.getElementById('confirmStopBanner').classList.add('hidden');
+            document.getElementById('feedbackPopupModal').classList.add('hidden');
+
+            playGameFinishSound();
+
+            const now = new Date();
+            const record = {
+                id: 'rec_' + Date.now() + '_' + Math.floor(Math.random() * 1000),
+                name: currentPlayer.name,
+                className: currentPlayer.className,
+                mode: selectedMode,
+                correct: scoreCorrect,
+                wrong: scoreWrong,
+                timestamp: now.getTime(),
+                formattedDate: formatIndonesianDateTime(now)
+            };
+
+            saveRecord(record);
+            renderTop3Preview();
+            syncTeacherDataAutomatically();
+
+            const ranked = getSortedRanking();
+            const rankIdx = ranked.findIndex(r => classKey(r) === classKey(record));
+            const rankNumber = rankIdx >= 0 ? rankIdx + 1 : ranked.length;
+
+            const totalAnswered = scoreCorrect + scoreWrong;
+            const accuracy = totalAnswered > 0 ? Math.round((scoreCorrect / totalAnswered) * 100) : 0;
+
+            let title = 'Pejuang Berhitung Bogor!';
+            if (scoreCorrect >= 35) title = 'Legenda Matematika Bogor!';
+            else if (scoreCorrect >= 20) title = 'Master Kuliner Bogor!';
+            else if (scoreCorrect >= 10) title = 'Jagoan Hitung Kota Hujan!';
+
+            const quote = MOTIVATION_QUOTES[Math.floor(Math.random() * MOTIVATION_QUOTES.length)];
+
+            document.getElementById('awardRankBadge').textContent = `Peringkat #${rankNumber}`;
+            document.getElementById('awardTitle').textContent = title;
+            document.getElementById('awardStudentInfo').textContent = `${currentPlayer.name} • ${currentPlayer.className}`;
+            document.getElementById('finalCorrectCount').textContent = scoreCorrect;
+            document.getElementById('finalWrongCount').textContent = scoreWrong;
+            document.getElementById('finalAccuracyText').textContent = `${accuracy}%`;
+            document.getElementById('randomQuoteText').textContent = `"${quote.text}"`;
+            document.getElementById('randomQuoteAuthor').textContent = `— ${quote.author}`;
+
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('awardScreen').classList.remove('hidden');
+        }
+
+        function resetToStart() {
+            document.getElementById('awardScreen').classList.add('hidden');
+            document.getElementById('teacherDashboardSection').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+            renderTop3Preview();
+        }
+
+        // --- Penyimpanan di Google Sheet (via Apps Script) ---
+        let publicRecords = [];
+        let teacherRecords = [];
+        let pendingRecords = [];
+        let teacherToken = null;
+        let myServerRecords = [];
+        let skipMyFetch = false;
+
+        function safeGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
+        function safeSet(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+        function safeDel(k) { try { localStorage.removeItem(k); } catch (e) {} }
+
+        teacherToken = safeGet('teacher_token_v1');
+
+        let memDeviceId = null;
+        function getDeviceId() {
+            let id = safeGet('device_id_v1') || memDeviceId;
+            if (!id) {
+                id = 'dev_' + ((window.crypto && crypto.randomUUID) ? crypto.randomUUID().replace(/-/g, '')
+                    : (Date.now().toString(36) + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)));
+                safeSet('device_id_v1', id);
+            }
+            memDeviceId = id;
+            return id;
+        }
+
+        function getAllRecords() { return teacherRecords; }
+
+        function saveRecord(record) {
+            record.deviceId = getDeviceId();
+            pendingRecords.push(record);
+            sendPendingRecords();
+        }
+
+        function fetchMyRecords() {
+            const ident = getHistoryIdentity();
+            if (!ident) return;
+            apiPost({ action: 'mine', name: ident.name, className: ident.className })
+                .then(res => {
+                    if (!res || !res.ok) return;
+                    myServerRecords = res.records || [];
+                    const modalOpen = !document.getElementById('historyModal').classList.contains('hidden');
+                    const histActive = document.getElementById('tabBtnHistory').classList.contains('bg-white');
+                    if (modalOpen && histActive) {
+                        skipMyFetch = true;
+                        switchHistoryTab('history');
+                        skipMyFetch = false;
+                    }
+                })
+                .catch(() => {});
+        }
+
+        function getHistoryIdentity() {
+            const n = document.getElementById('studentNameInput').value.trim();
+            const c = document.getElementById('studentClassInput').value.trim();
+            if (n && c) return { name: n, className: c };
+            if (currentPlayer.name && currentPlayer.className) return currentPlayer;
+            return null;
+        }
+
+        function getMyRecords(ident) {
+            const key = classKey(ident);
+            const serverIds = new Set(myServerRecords.map(r => r.id));
+            const pend = pendingRecords.filter(r => !serverIds.has(r.id));
+            return [...pend, ...myServerRecords]
+                .filter(r => classKey(r) === key)
+                .sort((a, b) => b.timestamp - a.timestamp);
+        }
+
+        function sendPendingRecords() {
+            pendingRecords.slice().forEach(rec => {
+                if (rec._sending) return;
+                rec._sending = true;
+                const payload = { id: rec.id, name: rec.name, className: rec.className, mode: rec.mode,
+                                  correct: rec.correct, wrong: rec.wrong, timestamp: rec.timestamp,
+                                  formattedDate: rec.formattedDate, deviceId: rec.deviceId };
+                apiPost({ action: 'save', record: payload })
+                    .then(res => {
+                        if (!res || !res.ok) throw new Error('gagal');
+                        pendingRecords = pendingRecords.filter(r => r.id !== rec.id);
+                        fetchRecordsFromServer(false);
+                        fetchMyRecords();
+                    })
+                    .catch(() => {
+                        rec._sending = false;
+                        setTimeout(sendPendingRecords, 3000);
+                    });
+            });
+        }
+
+        function isTeacherPanelOpen() {
+            return !document.getElementById('teacherDashboardSection').classList.contains('hidden');
+        }
+
+        function serverErrorMessage() {
+            return API_URL
+                ? 'Tidak bisa terhubung ke server. Cek koneksi & deployment (akses: Anyone).'
+                : 'Alamat server belum diisi (API_URL_MANUAL).';
+        }
+
+        function fetchRecordsFromServer(manual) {
+            if (!API_URL) {
+                if (manual || !serverErrorShown) {
+                    serverErrorShown = true;
+                    showToast(serverErrorMessage(), 'error');
+                }
+                return;
+            }
+            if (isTeacherPanelOpen() && teacherToken) {
+                apiPost({ action: 'teacher', token: teacherToken })
+                    .then(res => {
+                        if (!res || !res.ok) { teacherToken = null; safeDel('teacher_token_v1'); closeTeacherDashboard(); showToast('Sesi guru berakhir, silakan login lagi.', 'info'); return; }
+                        teacherRecords = res.records || [];
+                        syncTeacherDataAutomatically();
+                        if (manual) showToast('Data siswa berhasil diperbarui!', 'success');
+                    })
+                    .catch(() => {
+                        if (manual) showToast('Gagal mengambil data dari server.', 'error');
+                        else if (!serverErrorShown) { serverErrorShown = true; showToast(serverErrorMessage(), 'error'); }
+                    });
+                return;
+            }
+            apiGet({ action: 'ranking' })
+                .then(res => {
+                    publicRecords = (res && res.records) || [];
+                    renderTop3Preview();
+                    if (!document.getElementById('historyModal').classList.contains('hidden')) {
+                        const isRankingActive = document.getElementById('tabBtnRanking').classList.contains('bg-white');
+                        switchHistoryTab(isRankingActive ? 'ranking' : 'history');
+                    }
+                    if (manual) showToast('Data berhasil diperbarui!', 'success');
+                })
+                .catch(() => {
+                    if (manual) showToast('Gagal mengambil data dari server.', 'error');
+                    else if (!serverErrorShown) { serverErrorShown = true; showToast(serverErrorMessage(), 'error'); }
+                });
+        }
+
+        // Papan skor: nama + kelas sama -> hanya poin tertinggi
+        function classKey(r) {
+            return String(r.name || '').trim().toLowerCase() + '|' + String(r.className || '').trim().toUpperCase();
+        }
+
+        function getSortedRanking() {
+            const serverIds = new Set(publicRecords.map(r => r.id));
+            const all = [...pendingRecords.filter(r => !serverIds.has(r.id)), ...publicRecords];
+            const sorted = all.sort((a, b) => {
+                if (b.correct !== a.correct) return b.correct - a.correct;
+                if (a.wrong !== b.wrong) return a.wrong - b.wrong;
+                return a.timestamp - b.timestamp;
+            });
+            const seen = new Set();
+            return sorted.filter(r => {
+                const k = classKey(r);
+                if (seen.has(k)) return false;
+                seen.add(k);
+                return true;
+            });
+        }
+
+        function formatIndonesianDateTime(dateObj) {
+            const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            const dayName = days[dateObj.getDay()];
+            const d = String(dateObj.getDate()).padStart(2, '0');
+            const m = months[dateObj.getMonth()];
+            const y = dateObj.getFullYear();
+            const hh = String(dateObj.getHours()).padStart(2, '0');
+            const mm = String(dateObj.getMinutes()).padStart(2, '0');
+            return `${dayName}, ${d} ${m} ${y} • ${hh}:${mm}`;
+        }
+
+        function extractDayDateOnly(formattedDateStr) {
+            if (!formattedDateStr) return '-';
+            return formattedDateStr.split('•')[0].trim();
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function renderTop3Preview() {
+            const container = document.getElementById('top3PreviewContainer');
+            if (!container) return;
+            const top3 = getSortedRanking().slice(0, 3);
+
+            if (top3.length === 0) {
+                container.innerHTML = `<p class="text-slate-400 italic text-center py-2">Belum ada skor tercatat. Jadilah peringkat #1!</p>`;
+                return;
+            }
+
+            const medals = ['🥇', '🥈', '🥉'];
+            container.innerHTML = top3.map((item, idx) => `
+                <div class="flex items-center justify-between bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-100">
+                    <div class="flex items-center gap-2 min-w-0">
+                        <span>${medals[idx]}</span>
+                        <span class="font-bold text-slate-800 truncate">${escapeHtml(item.name)}</span>
+                        <span class="text-[10px] font-semibold text-slate-500 shrink-0">(${escapeHtml(item.className)})</span>
+                    </div>
+                    <span class="font-extrabold text-emerald-600 shrink-0 ml-2">${item.correct} Benar</span>
+                </div>
+            `).join('');
+        }
+
+        // --- Modal Ranking & Riwayat ---
+        function openHistoryModal(tab = 'ranking') {
+            document.getElementById('historyModal').classList.remove('hidden');
+            switchHistoryTab(tab);
+        }
+
+        function closeHistoryModal() {
+            document.getElementById('historyModal').classList.add('hidden');
+        }
+
+        function switchHistoryTab(tab) {
+            const btnRank = document.getElementById('tabBtnRanking');
+            const btnHist = document.getElementById('tabBtnHistory');
+            const body = document.getElementById('historyModalBody');
+
+            if (tab === 'ranking') {
+                btnRank.className = 'py-2 rounded-xl font-extrabold text-xs transition bg-white text-slate-800 shadow-xs';
+                btnHist.className = 'py-2 rounded-xl font-extrabold text-xs transition text-slate-600 hover:text-slate-800';
+
+                const top10 = getSortedRanking().slice(0, 10);
+                if (top10.length === 0) {
+                    body.innerHTML = `<p class="text-center text-slate-400 text-xs py-8">Belum ada data peringkat siswa.</p>`;
+                    return;
+                }
+
+                body.innerHTML = top10.map((item, idx) => {
+                    const modeLabel = item.mode === 'divide' ? 'Pembagian (÷)' : 'Perkalian (×)';
+                    return `
+                        <div class="flex items-center justify-between p-3 rounded-2xl border ${idx === 0 ? 'bg-amber-50/80 border-amber-300' : 'bg-slate-50 border-slate-200/80'}">
+                            <div class="flex items-center gap-3 min-w-0">
+                                <div class="w-8 h-8 rounded-xl ${idx < 3 ? 'bg-amber-400 text-slate-900' : 'bg-slate-200 text-slate-700'} font-extrabold text-xs flex items-center justify-center shrink-0">
+                                    #${idx + 1}
+                                </div>
+                                <div class="min-w-0">
+                                    <p class="font-extrabold text-slate-800 text-xs sm:text-sm truncate">${escapeHtml(item.name)}</p>
+                                    <p class="text-[11px] font-semibold text-slate-500">${escapeHtml(item.className)} • ${modeLabel}</p>
+                                </div>
+                            </div>
+                            <div class="text-right shrink-0 ml-2">
+                                <span class="font-extrabold text-emerald-600 text-sm block">${item.correct} Benar</span>
+                                <span class="text-[10px] font-semibold text-rose-500">${item.wrong} Salah</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else {
+                btnHist.className = 'py-2 rounded-xl font-extrabold text-xs transition bg-white text-slate-800 shadow-xs';
+                btnRank.className = 'py-2 rounded-xl font-extrabold text-xs transition text-slate-600 hover:text-slate-800';
+
+                const ident = getHistoryIdentity();
+                if (!ident) {
+                    body.innerHTML = `<p class="text-center text-slate-400 text-xs py-8">Isi nama dan kelas di halaman awal dulu untuk melihat riwayatmu.</p>`;
+                    return;
+                }
+                if (!skipMyFetch) fetchMyRecords();
+                const all = getMyRecords(ident);
+                if (all.length === 0) {
+                    body.innerHTML = `<p class="text-center text-slate-400 text-xs py-8">Belum ada riwayat pengerjaan untuk ${escapeHtml(ident.name)} (${escapeHtml(ident.className)}) di perangkat ini.</p>`;
+                    return;
+                }
+
+                body.innerHTML = all.map(item => {
+                    const modeLabel = item.mode === 'divide' ? 'Pembagian (÷)' : 'Perkalian (×)';
+                    return `
+                        <div class="p-3 rounded-2xl bg-slate-50 border border-slate-200/80 flex items-center justify-between gap-2">
+                            <div class="min-w-0">
+                                <p class="font-extrabold text-slate-800 text-xs truncate">${escapeHtml(item.name)} <span class="text-slate-500 font-semibold">(${escapeHtml(item.className)})</span></p>
+                                <p class="text-[10px] font-semibold text-slate-500 mt-0.5">${modeLabel} • ${escapeHtml(item.formattedDate || '')}</p>
+                            </div>
+                            <div class="text-right shrink-0 text-xs font-extrabold">
+                                <span class="text-emerald-600">${item.correct} Benar</span>
+                                <span class="text-slate-300 mx-1">|</span>
+                                <span class="text-rose-500">${item.wrong} Salah</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // --- Login & Panel Khusus Guru ---
+        function openTeacherLoginModal() {
+            if (teacherToken) {
+                apiPost({ action: 'teacher', token: teacherToken })
+                    .then(res => {
+                        if (res && res.ok) {
+                            teacherRecords = res.records || [];
+                            openTeacherDashboard();
+                        } else {
+                            teacherToken = null;
+                            safeDel('teacher_token_v1');
+                            showTeacherLoginForm();
+                        }
+                    })
+                    .catch(() => showTeacherLoginForm());
+                return;
+            }
+            showTeacherLoginForm();
+        }
+
+        function logoutTeacher() {
+            teacherToken = null;
+            safeDel('teacher_token_v1');
+            closeTeacherDashboard();
+            showToast('Berhasil keluar dari akun guru.', 'info');
+        }
+
+        function showTeacherLoginForm() {
+            document.getElementById('teacherPasswordInput').value = '';
+            document.getElementById('teacherLoginError').classList.add('hidden');
+            document.getElementById('teacherLoginModal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('teacherPasswordInput').focus(), 50);
+        }
+
+        function closeTeacherLoginModal() {
+            document.getElementById('teacherLoginModal').classList.add('hidden');
+        }
+
+        function toggleTeacherPasswordVisibility() {
+            const input = document.getElementById('teacherPasswordInput');
+            const icon = document.getElementById('teacherEyeIcon');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.className = 'fa-solid fa-eye-slash';
+            } else {
+                input.type = 'password';
+                icon.className = 'fa-solid fa-eye';
+            }
+        }
+
+        function verifyTeacherLogin() {
+            const pwd = document.getElementById('teacherPasswordInput').value;
+            apiPost({ action: 'teacher', password: pwd })
+                .then(res => {
+                    if (res && res.ok) {
+                        teacherToken = res.token || null;
+                        if (teacherToken) safeSet('teacher_token_v1', teacherToken);
+                        teacherRecords = res.records || [];
+                        closeTeacherLoginModal();
+                        openTeacherDashboard();
+                    } else {
+                        document.getElementById('teacherLoginError').classList.remove('hidden');
+                    }
+                })
+                .catch(() => showToast('Gagal terhubung ke server.', 'error'));
+        }
+
+        function openTeacherDashboard() {
+            clearInterval(gameTimerInterval);
+            clearInterval(questionTimerInterval);
+            clearTimeout(popupTimeout);
+            stopBgmLoop();
+            isProcessingPopup = false;
+            isGamePaused = false;
+
+            populateTeacherClassFilter();
+            populateTeacherDateFilter();
+            renderTeacherTable();
+
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('awardScreen').classList.add('hidden');
+            document.getElementById('teacherDashboardSection').classList.remove('hidden');
+
+            fetchRecordsFromServer(false);
+        }
+
+        function syncTeacherDataAutomatically() {
+            populateTeacherClassFilter();
+            populateTeacherDateFilter();
+            renderTeacherTable();
+            if (!document.getElementById('historyModal').classList.contains('hidden')) {
+                const isRankingActive = document.getElementById('tabBtnRanking').classList.contains('bg-white');
+                switchHistoryTab(isRankingActive ? 'ranking' : 'history');
+            }
+        }
+
+        function refreshTeacherDashboardData() {
+            const icon = document.getElementById('teacherRefreshIcon');
+            if (icon) icon.classList.add('fa-spin');
+            fetchRecordsFromServer(true);
+            setTimeout(() => {
+                if (icon) icon.classList.remove('fa-spin');
+            }, 600);
+        }
+
+        function closeTeacherDashboard() {
+            teacherRecords = [];
+            document.getElementById('teacherDashboardSection').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+            renderTop3Preview();
+            fetchRecordsFromServer(false);
+        }
+
+        function populateTeacherClassFilter() {
+            const select = document.getElementById('teacherClassFilter');
+            if (!select) return;
+            const prevVal = select.value;
+            const records = getAllRecords();
+            const uniqueClasses = Array.from(new Set(records.map(r => (r.className || '').trim()).filter(Boolean))).sort((a, b) => a.localeCompare(b));
+
+            select.innerHTML = `<option value="ALL">Semua Kelas</option>` +
+                uniqueClasses.map(cls => `<option value="${escapeHtml(cls)}">${escapeHtml(cls)}</option>`).join('');
+
+            if (uniqueClasses.includes(prevVal)) {
+                select.value = prevVal;
+            }
+        }
+
+        function populateTeacherDateFilter() {
+            const select = document.getElementById('teacherDateFilter');
+            if (!select) return;
+            const prevVal = select.value;
+            const records = getAllRecords();
+            const uniqueDates = Array.from(new Set(records.map(r => extractDayDateOnly(r.formattedDate)).filter(d => d && d !== '-')));
+
+            select.innerHTML = `<option value="ALL">Semua Hari & Tanggal</option>` +
+                uniqueDates.map(dt => `<option value="${escapeHtml(dt)}">${escapeHtml(dt)}</option>`).join('');
+
+            if (uniqueDates.includes(prevVal)) {
+                select.value = prevVal;
+            }
+        }
+
+        function getFilteredSortedTeacherRecords() {
+            const records = getAllRecords();
+            const search = (document.getElementById('teacherSearchInput')?.value || '').trim().toLowerCase();
+            const classFilter = document.getElementById('teacherClassFilter')?.value || 'ALL';
+            const dateFilter = document.getElementById('teacherDateFilter')?.value || 'ALL';
+            const modeFilter = document.getElementById('teacherModeFilter')?.value || 'ALL';
+            const sortOrder = document.getElementById('teacherSortOrder')?.value || 'score_desc';
+
+            let filtered = records.filter(r => {
+                const matchName = !search || (r.name || '').toLowerCase().includes(search);
+                const matchClass = classFilter === 'ALL' || (r.className || '').trim() === classFilter;
+                const matchDate = dateFilter === 'ALL' || extractDayDateOnly(r.formattedDate) === dateFilter;
+                const recMode = r.mode || 'multiply';
+                const matchMode = modeFilter === 'ALL' || recMode === modeFilter;
+                return matchName && matchClass && matchDate && matchMode;
+            });
+
+            filtered.sort((a, b) => {
+                if (sortOrder === 'score_desc') {
+                    if (b.correct !== a.correct) return b.correct - a.correct;
+                    return a.wrong - b.wrong;
+                } else if (sortOrder === 'score_asc') {
+                    if (a.correct !== b.correct) return a.correct - b.correct;
+                    return b.wrong - a.wrong;
+                } else if (sortOrder === 'name_asc') {
+                    return (a.name || '').localeCompare(b.name || '', 'id', { sensitivity: 'base' });
+                }
+                return 0;
+            });
+
+            return filtered;
+        }
+
+        function renderTeacherTable() {
+            const tbody = document.getElementById('teacherTableBody');
+            if (!tbody) return;
+
+            const filtered = getFilteredSortedTeacherRecords();
+
+            const totalAttempts = filtered.length;
+            const totalCorrect = filtered.reduce((acc, r) => acc + (r.correct || 0), 0);
+            const avgCorrect = totalAttempts > 0 ? (totalCorrect / totalAttempts).toFixed(1) : '0';
+            const highestScore = totalAttempts > 0 ? Math.max(...filtered.map(r => r.correct || 0)) : 0;
+
+            document.getElementById('teacherTotalAttempts').textContent = totalAttempts;
+            document.getElementById('teacherAvgCorrect').textContent = avgCorrect;
+            document.getElementById('teacherHighestScore').textContent = highestScore;
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400 font-semibold">Tidak ada data siswa yang sesuai filter.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map((r, idx) => {
+                const isDivide = r.mode === 'divide';
+                const modeBadge = isDivide
+                    ? `<span class="bg-sky-100 text-sky-800 font-bold px-2 py-0.5 rounded-lg text-[11px]">Pembagian (÷)</span>`
+                    : `<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded-lg text-[11px]">Perkalian (×)</span>`;
+                return `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="py-2.5 px-3 font-bold text-slate-500">${idx + 1}</td>
+                        <td class="py-2.5 px-3 font-extrabold text-slate-800">${escapeHtml(r.name)}</td>
+                        <td class="py-2.5 px-3 font-semibold text-slate-600">${escapeHtml(r.className)}</td>
+                        <td class="py-2.5 px-3">${modeBadge}</td>
+                        <td class="py-2.5 px-3 text-center font-extrabold text-emerald-600">${r.correct}</td>
+                        <td class="py-2.5 px-3 text-center font-bold text-rose-500">${r.wrong}</td>
+                        <td class="py-2.5 px-3 text-slate-500 font-medium">${escapeHtml(r.formattedDate || '-')}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function exportHistoryToCSV() {
+            const rows = getFilteredSortedTeacherRecords();
+            if (rows.length === 0) {
+                showToast('Belum ada data untuk diekspor.', 'info');
+                return;
+            }
+
+            const header = ['No', 'Nama Siswa', 'Kelas', 'Materi', 'Benar (Poin)', 'Salah', 'Hari & Tanggal'];
+            const csvLines = [header.join(',')];
+
+            rows.forEach((r, i) => {
+                const modeLabel = r.mode === 'divide' ? 'Pembagian' : 'Perkalian';
+                const line = [
+                    i + 1,
+                    `"${(r.name || '').replace(/"/g, '""')}"`,
+                    `"${(r.className || '').replace(/"/g, '""')}"`,
+                    `"${modeLabel}"`,
+                    r.correct,
+                    r.wrong,
+                    `"${(r.formattedDate || '').replace(/"/g, '""')}"`
+                ];
+                csvLines.push(line.join(','));
+            });
+
+            const blob = new Blob([csvLines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `Rekap_Matematika_Bogor_${new Date().toISOString().slice(0, 10)}.csv`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+            showToast('File CSV berhasil diunduh!', 'success');
+        }
+
+        function promptClearAllData() {
+            document.getElementById('confirmResetBanner').classList.remove('hidden');
+        }
+
+        function cancelClearAllData() {
+            document.getElementById('confirmResetBanner').classList.add('hidden');
+        }
+
+        function executeClearAllData() {
+            apiPost({ action: 'clear', token: teacherToken })
+                .then(res => {
+                    document.getElementById('confirmResetBanner').classList.add('hidden');
+                    if (res && res.ok) {
+                        teacherRecords = [];
+                        publicRecords = [];
+                        pendingRecords = [];
+                        myServerRecords = [];
+                        syncTeacherDataAutomatically();
+                        renderTop3Preview();
+                        showToast('Seluruh data riwayat siswa telah dihapus.', 'success');
+                    } else {
+                        showToast('Sandi tidak valid.', 'error');
+                    }
+                })
+                .catch(() => showToast('Gagal menghapus data di server.', 'error'));
+        }
+
+        // --- Notifikasi Toast ---
+        let toastTimeout = null;
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toastNotification');
+            const icon = document.getElementById('toastIcon');
+            const msg = document.getElementById('toastMessage');
+
+            msg.textContent = message;
+            if (type === 'error') {
+                icon.className = 'fa-solid fa-circle-exclamation text-rose-400';
+            } else if (type === 'success') {
+                icon.className = 'fa-solid fa-circle-check text-emerald-400';
+            } else {
+                icon.className = 'fa-solid fa-circle-info text-amber-400';
+            }
+
+            toast.classList.remove('hidden');
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2600);
+        }
+
+        // Muat data dari server saat halaman dibuka, lalu perbarui otomatis
+        window.addEventListener('DOMContentLoaded', () => {
+            renderTop3Preview();
+            fetchRecordsFromServer(false);
+        });
+
+        // Guru: tiap 5 detik. Beranda: tiap 15 detik. Dihentikan saat siswa bermain.
+        let pollCount = 0;
+        setInterval(() => {
+            if (document.hidden) return;
+            if (!document.getElementById('gameScreen').classList.contains('hidden')) return;
+            if (!API_URL) return;
+            pollCount++;
+            const teacherOpen = isTeacherPanelOpen();
+            if (teacherOpen || pollCount % 3 === 0) fetchRecordsFromServer(false);
+        }, 5000);
+    </script>
 </body>
 </html>
