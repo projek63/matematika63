@@ -10,9 +10,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <!-- Google Fonts: Plus Jakarta Sans & JetBrains Mono -->
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-
+    
     <style>
+        html { -webkit-text-size-adjust: 100%; }
+        /* Responsif tombol: tanpa jeda 300ms, ada umpan balik saat disentuh */
+        button, [onclick], select, label, a { touch-action: manipulation; }
+        button { cursor: pointer; -webkit-user-select: none; user-select: none; transition: transform 0.08s ease, background-color 0.15s ease, filter 0.15s ease; }
+        button:not(.calc-btn):not(.calc-btn-clear):not(.calc-btn-enter):active { transform: scale(0.95); filter: brightness(0.93); }
+        button:disabled { opacity: 0.6; cursor: wait; }
+        /* Kolom isian tetap bisa diketik di iPhone/Safari */
+        input, textarea, select { -webkit-user-select: text; user-select: text; }
+        @media (max-width: 640px) { input, select, textarea { font-size: 16px !important; } }
+        @media (pointer: coarse) { header button, .tap-target { min-height: 44px; } }
+        /* HP layar pendek / mode landscape: keypad lebih ringkas agar muat */
+        @media (max-height: 720px) { .calc-btn, .calc-btn-clear { padding-top: 0.5rem !important; padding-bottom: 0.5rem !important; } }
         body {
+            min-height: 100dvh;
             font-family: 'Plus Jakarta Sans', sans-serif;
             background: linear-gradient(135deg, #FEF08A 0%, #BAE6FD 45%, #A7F3D0 100%);
             min-height: 100vh;
@@ -22,10 +35,12 @@
         .font-mono-calc {
             font-family: 'JetBrains Mono', monospace;
         }
+        /* Pola dekoratif cerah khas kota hujan & kuliner Bogor */
         .bg-pattern {
             background-image: radial-gradient(#0284c722 2px, transparent 2px);
             background-size: 24px 24px;
         }
+        /* Efek tombol kalkulator taktil */
         .calc-btn {
             transition: transform 0.08s ease, box-shadow 0.08s ease, background-color 0.15s ease;
             box-shadow: 0 4px 0 #cbd5e1;
@@ -48,6 +63,7 @@
             transform: translateY(3px);
             box-shadow: 0 1px 0 #047857;
         }
+        /* Animasi karakter anak perempuan & anak laki-laki saat feedback */
         @keyframes girlJumpCheer {
             0%, 100% { transform: translateY(0) rotate(-3deg); }
             50% { transform: translateY(-10px) rotate(4deg); }
@@ -63,6 +79,7 @@
         .animate-boy-cry {
             animation: boyCryWobble 0.35s ease-in-out infinite;
         }
+        /* Scrollbar halus untuk riwayat & peringkat */
         ::-webkit-scrollbar {
             width: 6px;
             height: 6px;
@@ -80,7 +97,8 @@
 <body class="bg-pattern text-slate-800 flex flex-col justify-between min-h-screen overflow-x-hidden">
 
     <!-- ==================== HEADER & TOMBOL POJOK KANAN ATAS ==================== -->
-    <header class="w-full px-3 sm:px-6 pt-3 pb-2 flex items-center justify-between gap-2 z-20">
+    <header class="w-full px-3 sm:px-6 pt-3 pb-2 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 z-20">
+        <!-- Badge Identitas Game -->
         <div class="flex items-center gap-2 bg-white/90 backdrop-blur-md px-3.5 py-2 rounded-2xl shadow-sm border border-sky-100">
             <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white shadow-sm">
                 <i class="fa-solid fa-calculator text-sm"></i>
@@ -91,16 +109,17 @@
             </div>
         </div>
 
-        <div class="flex items-center gap-1.5 sm:gap-2">
-            <button onclick="openHistoryModal('ranking')" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-xs px-2.5 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5 border border-amber-500/30">
+        <!-- Menu Kecil Pojok Kanan Atas: Top 10, Riwayat & Login Guru -->
+        <div class="grid grid-cols-3 sm:flex items-center gap-1.5 sm:gap-2">
+            <button onclick="openHistoryModal('ranking')" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold text-xs sm:text-sm px-3 py-2.5 justify-center rounded-xl shadow-sm transition flex items-center gap-1.5 border border-amber-500/30">
                 <i class="fa-solid fa-trophy text-amber-800"></i>
                 <span>Top 10</span>
             </button>
-            <button onclick="openHistoryModal('history')" class="bg-white/95 hover:bg-sky-50 text-sky-800 font-bold text-xs px-2.5 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5 border border-sky-200">
+            <button onclick="openHistoryModal('history')" class="bg-white/95 hover:bg-sky-50 text-sky-800 font-bold text-xs sm:text-sm px-3 py-2.5 justify-center rounded-xl shadow-sm transition flex items-center gap-1.5 border border-sky-200">
                 <i class="fa-solid fa-clock-rotate-left text-sky-600"></i>
                 <span>Riwayat Saya</span>
             </button>
-            <button onclick="openTeacherLoginModal()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs px-2.5 py-2 rounded-xl shadow-sm transition flex items-center gap-1.5">
+            <button onclick="openTeacherLoginModal()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold text-xs sm:text-sm px-3 py-2.5 justify-center rounded-xl shadow-sm transition flex items-center gap-1.5">
                 <i class="fa-solid fa-chalkboard-user text-emerald-400"></i>
                 <span>Guru</span>
             </button>
@@ -108,10 +127,10 @@
     </header>
 
     <!-- ==================== KONTEN UTAMA ==================== -->
-    <main class="flex-1 flex items-center justify-center px-3 py-4">
+    <main class="flex-1 flex items-start sm:items-center justify-center px-3 py-3 sm:py-4">
 
-        <!-- 1. LAYAR MULAI -->
-        <section id="startScreen" class="w-full max-w-md bg-white/95 backdrop-blur-md rounded-3xl shadow-xl border-2 border-white p-6 sm:p-7">
+        <!-- 1. LAYAR MULAI (INPUT NAMA & KELAS) -->
+        <section id="startScreen" class="w-full max-w-md md:max-w-lg bg-white/95 rounded-3xl shadow-xl border-2 border-white p-5 sm:p-7">
             <div class="text-center mb-5">
                 <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-white text-3xl shadow-md mb-3">
                     <i class="fa-solid fa-bowl-food"></i>
@@ -122,6 +141,7 @@
                 </p>
             </div>
 
+            <!-- Form Identitas Siswa & Pilihan Mode -->
             <div class="space-y-4">
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
@@ -165,6 +185,7 @@
                 </button>
             </div>
 
+            <!-- Pratinjau Singkat Top 3 -->
             <div class="mt-6 pt-4 border-t border-slate-100">
                 <div class="flex items-center justify-between mb-2">
                     <span class="text-xs font-extrabold text-slate-600 flex items-center gap-1.5">
@@ -174,19 +195,24 @@
                         Lihat Top 10 &rarr;
                     </button>
                 </div>
-                <div id="top3PreviewContainer" class="space-y-1.5 text-xs"></div>
+                <div id="top3PreviewContainer" class="space-y-1.5 text-xs">
+                    <!-- Diisi otomatis via JS -->
+                </div>
             </div>
         </section>
 
-        <!-- 2. LAYAR PERMAINAN -->
-        <section id="gameScreen" class="hidden w-full max-w-sm bg-slate-800 rounded-[2rem] shadow-2xl border-4 border-slate-700 p-4 sm:p-5 text-white">
+        <!-- 2. LAYAR PERMAINAN (KALKULATOR UKURAN SEDANG) -->
+        <section id="gameScreen" class="hidden w-full max-w-sm md:max-w-md bg-slate-800 rounded-[2rem] shadow-2xl border-4 border-slate-700 p-4 sm:p-5 text-white">
+            <!-- Bar Atas Kalkulator: Info Pemain & Tombol Kontrol -->
             <div class="bg-slate-900/90 px-3.5 py-3 rounded-2xl mb-3 border border-slate-700/80 space-y-2.5">
+                <!-- Baris 1: Identitas Siswa & Kotak Sisa Waktu yang Menonjol -->
                 <div class="flex items-center justify-between gap-2">
                     <div class="min-w-0">
                         <p id="playerBadge" class="text-xs font-extrabold text-emerald-300 truncate">Siswa • Kelas X</p>
                         <span id="gameModeBadge" class="inline-block bg-sky-500/20 text-sky-300 border border-sky-400/30 px-2 py-0.5 rounded-md text-[10px] font-bold mt-1">Perkalian (×)</span>
                     </div>
 
+                    <!-- Kotak Sisa Waktu -->
                     <div class="bg-slate-800/95 border border-amber-400/30 px-3 py-1.5 rounded-xl flex items-center gap-2 shrink-0 shadow-inner">
                         <i class="fa-regular fa-clock text-amber-400 text-sm"></i>
                         <div class="text-right">
@@ -198,7 +224,8 @@
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+                <!-- Baris 2: Skor Benar/Salah & Tombol Kontrol (Suara, Jeda, Ulang, Selesai) -->
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-800">
                     <div class="flex items-center gap-2 text-xs font-extrabold">
                         <span class="bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 px-2.5 py-1 rounded-lg flex items-center gap-1.5">
                             <i class="fa-solid fa-circle-check"></i> <span id="scoreCorrect">0</span>
@@ -209,22 +236,23 @@
                     </div>
 
                     <div class="flex items-center gap-1.5 shrink-0">
-                        <button id="soundToggleBtn" onclick="toggleAudioMute()" title="Suara Aktif / Bisu" class="bg-sky-600/90 hover:bg-sky-500 text-white w-8 h-8 rounded-xl flex items-center justify-center transition shadow">
+                        <button id="soundToggleBtn" onclick="toggleAudioMute()" title="Suara Aktif / Bisu" class="bg-sky-600/90 hover:bg-sky-500 text-white w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition shadow">
                             <i id="soundToggleIcon" class="fa-solid fa-volume-high text-xs"></i>
                         </button>
-                        <button id="pauseToggleBtn" onclick="togglePauseGame()" title="Jeda / Lanjutkan Permainan" class="bg-amber-500/90 hover:bg-amber-400 text-slate-900 w-8 h-8 rounded-xl flex items-center justify-center transition shadow">
+                        <button id="pauseToggleBtn" onclick="togglePauseGame()" title="Jeda / Lanjutkan Permainan" class="bg-amber-500/90 hover:bg-amber-400 text-slate-900 w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition shadow">
                             <i id="pauseToggleIcon" class="fa-solid fa-pause text-xs"></i>
                         </button>
-                        <button onclick="promptRestartGame()" title="Ulang dari Awal (Tidak Tersimpan)" class="bg-indigo-500/90 hover:bg-indigo-400 text-white w-8 h-8 rounded-xl flex items-center justify-center transition shadow">
+                        <button onclick="promptRestartGame()" title="Ulang dari Awal (Tidak Tersimpan)" class="bg-indigo-500/90 hover:bg-indigo-400 text-white w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition shadow">
                             <i class="fa-solid fa-rotate-right text-xs"></i>
                         </button>
-                        <button onclick="promptStopGameEarly()" title="Hentikan Permainan (Tidak Tersimpan)" class="bg-rose-500/90 hover:bg-rose-500 text-white w-8 h-8 rounded-xl flex items-center justify-center transition shadow">
+                        <button onclick="promptStopGameEarly()" title="Hentikan Permainan (Tidak Tersimpan)" class="bg-rose-500/90 hover:bg-rose-500 text-white w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center transition shadow">
                             <i class="fa-solid fa-stop text-xs"></i>
                         </button>
                     </div>
                 </div>
             </div>
 
+            <!-- Banner Konfirmasi Ulang Permainan (Pengganti confirm()) -->
             <div id="confirmRestartBanner" class="hidden bg-slate-900/95 border border-indigo-400/50 rounded-2xl p-2.5 mb-3 flex items-center justify-between gap-2 text-xs">
                 <span class="font-bold text-indigo-200">Ulang skor & waktu ke 10:00? (Progres saat ini tidak disimpan)</span>
                 <div class="flex items-center gap-1.5 shrink-0">
@@ -233,6 +261,7 @@
                 </div>
             </div>
 
+            <!-- Banner Konfirmasi Hentikan Permainan (Tidak Masuk ke Data Siswa/Guru) -->
             <div id="confirmStopBanner" class="hidden bg-slate-900/95 border border-rose-400/50 rounded-2xl p-2.5 mb-3 flex items-center justify-between gap-2 text-xs">
                 <span class="font-bold text-rose-200">Hentikan permainan? Nilai tidak akan tersimpan.</span>
                 <div class="flex items-center gap-1.5 shrink-0">
@@ -241,7 +270,9 @@
                 </div>
             </div>
 
+            <!-- Layar LCD Kalkulator -->
             <div class="bg-[#d9ead3] text-slate-900 rounded-2xl p-4 mb-3.5 shadow-inner border-4 border-slate-600 relative overflow-hidden">
+                <!-- Overlay Layar Dijeda (Pause) -->
                 <div id="gamePauseOverlay" class="hidden absolute inset-0 z-10 bg-slate-900/95 text-white flex flex-col items-center justify-center p-3 text-center">
                     <div class="w-10 h-10 rounded-full bg-amber-400/20 text-amber-300 flex items-center justify-center mb-1.5">
                         <i class="fa-solid fa-pause text-base"></i>
@@ -259,10 +290,12 @@
                     <span class="font-mono-calc uppercase tracking-wider text-emerald-800">BOGOR-CALC</span>
                 </div>
 
+                <!-- Bar Progress Timer 5 Detik -->
                 <div class="w-full h-2 bg-slate-300/80 rounded-full overflow-hidden mb-3">
                     <div id="questionProgressBar" class="h-full bg-emerald-600 transition-all duration-100 ease-linear" style="width: 100%;"></div>
                 </div>
 
+                <!-- Tampilan Soal & Jawaban -->
                 <div class="flex items-center justify-between gap-2 min-h-[3.5rem]">
                     <div id="questionDisplay" class="font-mono-calc text-3xl sm:text-4xl font-extrabold text-slate-800 tracking-tight">
                         7 × 8 =
@@ -273,22 +306,23 @@
                 </div>
             </div>
 
+            <!-- Keypad Kalkulator Angka -->
             <div class="grid grid-cols-3 gap-2.5">
-                <button onclick="appendDigit('7')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">7</button>
-                <button onclick="appendDigit('8')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">8</button>
-                <button onclick="appendDigit('9')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">9</button>
+                <button data-fast="1" onclick="appendDigit('7')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 md:py-3.5 rounded-2xl">7</button>
+                <button data-fast="1" onclick="appendDigit('8')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 md:py-3.5 rounded-2xl">8</button>
+                <button data-fast="1" onclick="appendDigit('9')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 md:py-3.5 rounded-2xl">9</button>
 
-                <button onclick="appendDigit('4')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">4</button>
-                <button onclick="appendDigit('5')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">5</button>
-                <button onclick="appendDigit('6')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">6</button>
+                <button data-fast="1" onclick="appendDigit('4')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 md:py-3.5 rounded-2xl">4</button>
+                <button data-fast="1" onclick="appendDigit('5')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 md:py-3.5 rounded-2xl">5</button>
+                <button data-fast="1" onclick="appendDigit('6')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 md:py-3.5 rounded-2xl">6</button>
 
-                <button onclick="appendDigit('1')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">1</button>
-                <button onclick="appendDigit('2')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">2</button>
-                <button onclick="appendDigit('3')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">3</button>
+                <button data-fast="1" onclick="appendDigit('1')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 md:py-3.5 rounded-2xl">1</button>
+                <button data-fast="1" onclick="appendDigit('2')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 md:py-3.5 rounded-2xl">2</button>
+                <button data-fast="1" onclick="appendDigit('3')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 md:py-3.5 rounded-2xl">3</button>
 
-                <button onclick="clearInput()" class="calc-btn-clear bg-rose-100 hover:bg-rose-200 text-rose-700 font-extrabold text-lg py-3 rounded-2xl">C</button>
-                <button onclick="appendDigit('0')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 rounded-2xl">0</button>
-                <button onclick="backspaceInput()" aria-label="Hapus satu angka" class="calc-btn bg-amber-100 hover:bg-amber-200 text-amber-800 text-xl font-extrabold py-3 rounded-2xl">
+                <button data-fast="1" onclick="clearInput()" class="calc-btn-clear bg-rose-100 hover:bg-rose-200 text-rose-700 font-extrabold text-lg py-3 md:py-3.5 rounded-2xl">C</button>
+                <button data-fast="1" onclick="appendDigit('0')" class="calc-btn bg-slate-100 hover:bg-white text-slate-900 font-mono-calc text-2xl font-extrabold py-3 md:py-3.5 rounded-2xl">0</button>
+                <button data-fast="1" onclick="backspaceInput()" aria-label="Hapus satu angka" class="calc-btn bg-amber-100 hover:bg-amber-200 text-amber-800 text-xl font-extrabold py-3 md:py-3.5 rounded-2xl">
                     <i class="fa-solid fa-delete-left"></i>
                 </button>
 
@@ -303,7 +337,7 @@
             </p>
         </section>
 
-        <!-- 3. LAYAR PENGHARGAAN -->
+        <!-- 3. LAYAR PENGHARGAAN & QUOTES ACAK (SELESAI) -->
         <section id="awardScreen" class="hidden w-full max-w-md bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border-2 border-amber-200 p-6 sm:p-7 text-center">
             <div class="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-tr from-amber-400 via-yellow-300 to-orange-400 text-amber-900 text-4xl shadow-lg mb-3 border-4 border-white">
                 <i class="fa-solid fa-award"></i>
@@ -316,6 +350,7 @@
             <h2 id="awardTitle" class="text-2xl font-extrabold text-slate-800">Master Kuliner Bogor!</h2>
             <p id="awardStudentInfo" class="text-sm font-bold text-sky-700 mt-0.5">Nama Siswa • Kelas X</p>
 
+            <!-- Ringkasan Skor -->
             <div class="grid grid-cols-3 gap-2.5 my-5">
                 <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3">
                     <span class="text-[11px] font-bold text-emerald-700 block">Benar</span>
@@ -331,6 +366,7 @@
                 </div>
             </div>
 
+            <!-- Quotes Motivasi Acak -->
             <div class="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/80 rounded-2xl p-4 mb-5 relative">
                 <i class="fa-solid fa-quote-left text-amber-300 text-2xl absolute top-2.5 left-3"></i>
                 <p id="randomQuoteText" class="text-xs sm:text-sm font-semibold text-slate-700 italic px-4">
@@ -351,42 +387,44 @@
             </div>
         </section>
 
-        <!-- 4. PANEL KHUSUS GURU -->
-        <section id="teacherDashboardSection" class="hidden w-full max-w-5xl bg-white/95 backdrop-blur-md rounded-3xl shadow-2xl border-2 border-slate-200 overflow-hidden flex flex-col">
-            <div class="px-5 py-4 bg-slate-900 text-white flex flex-wrap items-center justify-between gap-3">
+        <!-- 4. HALAMAN PANEL KHUSUS GURU (BUKAN POP-UP) -->
+        <section id="teacherDashboardSection" class="hidden w-full max-w-5xl bg-white rounded-3xl shadow-2xl border-2 border-slate-200 overflow-hidden flex flex-col">
+            <!-- Header Dashboard Guru -->
+            <div class="px-4 sm:px-5 py-3 sm:py-4 bg-slate-900 text-white flex flex-col lg:flex-row lg:items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-400/30 text-emerald-400 flex items-center justify-center text-lg">
                         <i class="fa-solid fa-chalkboard-user"></i>
                     </div>
                     <div>
-                        <h2 class="font-extrabold text-base sm:text-lg">Panel Khusus Guru • Rekapitulasi Nilai Siswa</h2>
-                        <p class="text-xs text-slate-400">Kelola, filter per kelas, dan urutkan hasil latihan perkalian & pembagian</p>
+                        <h2 class="font-extrabold text-sm sm:text-lg leading-tight">Panel Guru • Rekap Nilai Siswa</h2>
+                        <p class="text-xs text-slate-400 hidden sm:block">Kelola, filter per kelas, dan urutkan hasil latihan perkalian & pembagian</p>
                     </div>
                 </div>
-                <div class="flex flex-wrap items-center gap-2">
-                    <button onclick="refreshTeacherDashboardData()" class="bg-sky-500 hover:bg-sky-600 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm">
+                <div class="grid grid-cols-2 sm:grid-cols-5 lg:flex lg:flex-wrap items-center gap-2">
+                    <button onclick="refreshTeacherDashboardData()" class="bg-sky-500 hover:bg-sky-600 text-white text-xs font-extrabold px-3 py-2.5 rounded-xl flex items-center justify-center gap-1.5 tap-target transition shadow-sm">
                         <i id="teacherRefreshIcon" class="fa-solid fa-arrows-rotate"></i>
                         <span>Refresh Data</span>
                     </button>
-                    <button onclick="exportHistoryToCSV()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm">
+                    <button onclick="exportHistoryToCSV()" class="bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-extrabold px-3 py-2.5 rounded-xl flex items-center justify-center gap-1.5 tap-target transition shadow-sm">
                         <i class="fa-solid fa-file-csv"></i>
                         <span>Ekspor CSV</span>
                     </button>
-                    <button onclick="promptClearAllData()" class="bg-rose-500/90 hover:bg-rose-600 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm">
+                    <button onclick="promptClearAllData()" class="bg-rose-500/90 hover:bg-rose-600 text-white text-xs font-extrabold px-3 py-2.5 rounded-xl flex items-center justify-center gap-1.5 tap-target transition shadow-sm">
                         <i class="fa-solid fa-trash-can"></i>
                         <span>Reset Data</span>
                     </button>
-                    <button onclick="logoutTeacher()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition shadow-sm">
+                    <button onclick="logoutTeacher()" class="bg-amber-500 hover:bg-amber-600 text-white text-xs font-extrabold px-3 py-2.5 rounded-xl flex items-center justify-center gap-1.5 tap-target transition shadow-sm">
                         <i class="fa-solid fa-right-from-bracket"></i>
                         <span>Keluar</span>
                     </button>
-                    <button onclick="closeTeacherDashboard()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 transition border border-slate-600">
+                    <button onclick="closeTeacherDashboard()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs font-extrabold px-3 py-2.5 rounded-xl flex items-center justify-center gap-1.5 tap-target transition border border-slate-600">
                         <i class="fa-solid fa-arrow-left"></i>
-                        <span>Kembali ke Beranda</span>
+                        <span>Beranda</span>
                     </button>
                 </div>
             </div>
 
+            <!-- Ringkasan Statistik, Filter Kelas & Pengurutan -->
             <div class="p-4 sm:p-5 bg-slate-50 border-b border-slate-200 space-y-4">
                 <div class="grid grid-cols-3 gap-3 text-center">
                     <div class="bg-white p-3 rounded-2xl border border-slate-200 shadow-2xs">
@@ -403,13 +441,16 @@
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-2.5">
-                    <div class="relative">
+                <!-- Bar Kontrol Filter Kelas, Materi, Hari & Tanggal, Pencarian & Urutan -->
+                <div class="grid grid-cols-2 lg:grid-cols-5 gap-2 sm:gap-2.5">
+                    <!-- Pencarian Nama -->
+                    <div class="relative col-span-2 lg:col-span-1">
                         <i class="fa-solid fa-magnifying-glass text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
                         <input type="text" id="teacherSearchInput" oninput="renderTeacherTable()" placeholder="Cari nama siswa..."
                             class="w-full pl-9 pr-3 py-2.5 rounded-xl bg-white border border-slate-300 text-xs font-semibold text-slate-700 focus:outline-none focus:border-emerald-500">
                     </div>
 
+                    <!-- Filter Setiap Kelas -->
                     <div class="relative">
                         <i class="fa-solid fa-graduation-cap text-emerald-600 absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
                         <select id="teacherClassFilter" onchange="renderTeacherTable()"
@@ -418,6 +459,7 @@
                         </select>
                     </div>
 
+                    <!-- Filter Hari & Tanggal -->
                     <div class="relative">
                         <i class="fa-regular fa-calendar-days text-rose-500 absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
                         <select id="teacherDateFilter" onchange="renderTeacherTable()"
@@ -426,6 +468,7 @@
                         </select>
                     </div>
 
+                    <!-- Filter Materi (Perkalian / Pembagian) -->
                     <div class="relative">
                         <i class="fa-solid fa-calculator text-sky-600 absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
                         <select id="teacherModeFilter" onchange="renderTeacherTable()"
@@ -436,6 +479,7 @@
                         </select>
                     </div>
 
+                    <!-- Urutkan Berdasarkan -->
                     <div class="relative">
                         <i class="fa-solid fa-arrow-down-wide-short text-amber-600 absolute left-3.5 top-1/2 -translate-y-1/2 text-xs"></i>
                         <select id="teacherSortOrder" onchange="renderTeacherTable()"
@@ -447,6 +491,7 @@
                     </div>
                 </div>
 
+                <!-- Banner Konfirmasi Reset (Pengganti confirm()) -->
                 <div id="confirmResetBanner" class="hidden bg-rose-50 border border-rose-200 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-2">
                     <span class="text-xs font-bold text-rose-800">Hapus seluruh riwayat & peringkat siswa di perangkat ini?</span>
                     <div class="flex items-center gap-2">
@@ -456,8 +501,9 @@
                 </div>
             </div>
 
-            <div class="p-4 sm:p-5 overflow-x-auto">
-                <table class="w-full text-left border-collapse text-xs">
+            <!-- Tabel Data Siswa -->
+            <div class="p-2 sm:p-5 overflow-x-auto" style="-webkit-overflow-scrolling: touch;">
+                <table class="w-full min-w-[620px] text-left border-collapse text-xs">
                     <thead>
                         <tr class="border-b-2 border-slate-200 text-slate-500 uppercase tracking-wider bg-slate-50/70">
                             <th class="py-2.5 px-3">No</th>
@@ -469,27 +515,35 @@
                             <th class="py-2.5 px-3">Hari & Tanggal</th>
                         </tr>
                     </thead>
-                    <tbody id="teacherTableBody" class="divide-y divide-slate-100"></tbody>
+                    <tbody id="teacherTableBody" class="divide-y divide-slate-100">
+                        <!-- Diisi via JS -->
+                    </tbody>
                 </table>
             </div>
         </section>
     </main>
 
-    <!-- ==================== POP-UP FEEDBACK ==================== -->
+    <!-- ==================== POP-UP FEEDBACK 5 DETIK ==================== -->
     <div id="feedbackPopupModal" class="hidden fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4">
         <div id="feedbackCard" class="w-full max-w-xs bg-white rounded-3xl shadow-2xl border-4 p-5 text-center">
             <div id="feedbackBadge" class="inline-block px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider mb-3">
                 BENAR!
             </div>
 
+            <!-- Karakter Animasi Anak Perempuan / Anak Laki-laki + Ilustrasi Bogor -->
             <div class="flex items-center justify-center gap-2 mb-3">
-                <div id="feedbackCharacterContainer" class="w-24 h-28 shrink-0 flex items-center justify-center"></div>
-                <div id="feedbackVisualContainer" class="w-28 h-28 shrink-0 rounded-2xl flex items-center justify-center p-2"></div>
+                <div id="feedbackCharacterContainer" class="w-24 h-28 shrink-0 flex items-center justify-center">
+                    <!-- SVG Karakter Anak dirender dinamis via JS -->
+                </div>
+                <div id="feedbackVisualContainer" class="w-28 h-28 shrink-0 rounded-2xl flex items-center justify-center p-2">
+                    <!-- SVG Kuliner / Bencana dirender dinamis via JS -->
+                </div>
             </div>
 
             <h3 id="feedbackItemTitle" class="text-xl font-extrabold text-slate-800 leading-snug">Soto Mie Bogor</h3>
             <p id="feedbackItemSubtitle" class="text-xs font-medium text-slate-500 mt-1 px-1">Segarnya kuah risoles & daging khas Bogor!</p>
 
+            <!-- Kotak Jawaban Sebenarnya yang Rapi -->
             <div id="feedbackAnswerBox" class="mt-3 pt-2.5 border-t border-slate-100">
                 <span id="feedbackAnswerLabel" class="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">Jawaban Sebenarnya</span>
                 <div id="feedbackAnswerValue" class="font-mono-calc text-base font-extrabold text-slate-800 bg-slate-100 px-3 py-1 rounded-xl inline-block mt-1">
@@ -499,9 +553,10 @@
         </div>
     </div>
 
-    <!-- ==================== MODAL RANKING & RIWAYAT ==================== -->
+    <!-- ==================== MODAL RANKING 1-10 & RIWAYAT SISWA ==================== -->
     <div id="historyModal" class="hidden fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4">
         <div class="w-full max-w-lg bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden flex flex-col max-h-[85vh]">
+            <!-- Header Modal -->
             <div class="px-5 py-4 bg-slate-800 text-white flex items-center justify-between">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-ranking-star text-amber-400 text-lg"></i>
@@ -512,6 +567,7 @@
                 </button>
             </div>
 
+            <!-- Navigasi Tab -->
             <div class="grid grid-cols-2 bg-slate-100 p-1.5 gap-1.5 border-b border-slate-200">
                 <button id="tabBtnRanking" onclick="switchHistoryTab('ranking')" class="py-2 rounded-xl font-extrabold text-xs transition bg-white text-slate-800 shadow-xs">
                     <i class="fa-solid fa-trophy text-amber-500 mr-1"></i> Ranking 1 - 10
@@ -521,11 +577,14 @@
                 </button>
             </div>
 
-            <div id="historyModalBody" class="p-4 overflow-y-auto flex-1 space-y-2.5"></div>
+            <!-- Isi Modal -->
+            <div id="historyModalBody" class="p-4 overflow-y-auto flex-1 space-y-2.5">
+                <!-- Konten dirender via JS -->
+            </div>
         </div>
     </div>
 
-    <!-- ==================== MODAL LOGIN GURU ==================== -->
+    <!-- ==================== MODAL LOGIN KHUSUS GURU ==================== -->
     <div id="teacherLoginModal" class="hidden fixed inset-0 z-40 bg-slate-900/60 backdrop-blur-xs flex items-center justify-center p-4">
         <div class="w-full max-w-sm bg-white rounded-3xl shadow-2xl border border-slate-200 p-6">
             <div class="flex items-center justify-between mb-4">
@@ -556,36 +615,32 @@
                         </button>
                     </div>
                     <p id="teacherLoginError" class="hidden text-xs font-bold text-rose-600 mt-1.5">
-                        <i class="fa-solid fa-circle-exclamation mr-1"></i> Kata sandi salah! Silakan coba lagi.
+                        <i class="fa-solid fa-circle-exclamation mr-1"></i> <span id="teacherLoginErrorText">Kata sandi salah! Silakan coba lagi.</span>
                     </p>
                 </div>
 
-                <button onclick="verifyTeacherLogin()" class="w-full py-3 rounded-2xl bg-slate-800 hover:bg-slate-900 text-white font-extrabold text-sm transition">
+                <button id="teacherLoginBtn" onclick="verifyTeacherLogin()" class="w-full py-3.5 rounded-2xl bg-slate-800 hover:bg-slate-900 text-white font-extrabold text-sm transition">
                     Masuk ke Panel Khusus Guru
                 </button>
             </div>
         </div>
     </div>
 
-    <!-- ==================== TOAST ==================== -->
+    <!-- ==================== NOTIFIKASI TOAST (PENGGANTI ALERT) ==================== -->
     <div id="toastNotification" class="hidden fixed bottom-5 left-1/2 -translate-x-1/2 z-50 bg-slate-900 text-white px-4 py-2.5 rounded-2xl shadow-xl text-xs font-bold flex items-center gap-2 border border-slate-700">
         <i id="toastIcon" class="fa-solid fa-circle-info text-amber-400"></i>
         <span id="toastMessage">Pesan notifikasi</span>
     </div>
 
-    <!-- ==================== SCRIPT UTAMA ==================== -->
+    <!-- ==================== SCRIPT UTAMA PERMAINAN ==================== -->
     <script>
         // --- Konstanta & Konfigurasi ---
-        // ============================================================
-        // WAJIB DIISI untuk hosting GitHub Pages:
-        // Tempel URL Web App Google Apps Script (berakhiran /exec) di bawah ini.
+        // ALAMAT SERVER: tempel URL Web App Apps Script (berakhiran /exec) di antara tanda kutip.
         // Contoh: 'https://script.google.com/macros/s/AKfycb.../exec'
-        // ============================================================
-        const API_URL_MANUAL = '';
-        const API_URL = API_URL_MANUAL;
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxIoXCb13qupSIQFdh3qzyKQIVf4WlwaSyofwaM5XjUDNU0gaiRiglJn6pIwBmc9QoK9Q/exec';
         let serverErrorShown = false;
 
-        // Komunikasi ke server memakai fetch (tanpa cookie)
+        // Komunikasi ke server memakai fetch (tanpa cookie) agar aman di Chrome multi-akun / Family
         function apiGet(params) {
             const q = new URLSearchParams(Object.assign({}, params, { t: Date.now() }));
             return fetch(API_URL + '?' + q.toString(), { method: 'GET', credentials: 'omit', redirect: 'follow' })
@@ -602,7 +657,7 @@
         const QUESTION_DURATION_MS = 5000;     // 5 Detik per soal
         const POPUP_DURATION_MS = 3000;        // 3 Detik pop-up feedback
 
-        // --- Data Kuliner Khas Bogor ---
+        // --- Data Kuliner Khas Bogor (SVG Statis Tanpa Animasi) ---
         const BOGOR_FOODS = [
             {
                 name: 'Soto Mie Bogor',
@@ -673,7 +728,7 @@
             }
         ];
 
-        // --- Data Bencana & Cuaca Ekstrem Bogor ---
+        // --- Data Bencana & Cuaca Ekstrem Bogor (SVG Statis Tanpa Animasi) ---
         const BOGOR_DISASTERS = [
             {
                 name: 'Hujan Petir Bogor',
@@ -712,6 +767,117 @@
             }
         ];
 
+        // --- Mode PEMBAGIAN: Benar = Minuman Kekinian (es kopi / teh), Salah = Jamu ---
+        function iceCupSVG(top, bottom, extra) {
+            return `<svg viewBox="0 0 120 120" class="w-full h-full">
+                    <line x1="68" y1="8" x2="76" y2="32" stroke="#f43f5e" stroke-width="5" stroke-linecap="round"/>
+                    <path d="M34 39 L40 106 Q41 110 46 110 H74 Q79 110 80 106 L86 39 Z" fill="#ffffff" fill-opacity="0.65" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M36 56 L41 104 Q42 107 46 107 H74 Q78 107 79 104 L84 56 Z" fill="${bottom}"/>
+                    <path d="M36 56 L37 74 H83 L84 56 Z" fill="${top}"/>
+                    <rect x="46" y="60" width="13" height="13" rx="3" fill="#ffffff" fill-opacity="0.55" transform="rotate(-12 52 66)"/>
+                    <rect x="64" y="72" width="13" height="13" rx="3" fill="#ffffff" fill-opacity="0.5" transform="rotate(10 70 78)"/>
+                    ${extra || ''}
+                    <rect x="30" y="31" width="60" height="9" rx="4" fill="#e2e8f0" stroke="#94a3b8" stroke-width="1.5"/>
+                </svg>`;
+        }
+
+        function jamuGlassSVG(color, extra) {
+            return `<svg viewBox="0 0 120 120" class="w-full h-full">
+                    <path d="M34 42 H78 L74 102 Q73 108 67 108 H45 Q39 108 38 102 Z" fill="#ffffff" fill-opacity="0.65" stroke="#94a3b8" stroke-width="2"/>
+                    <path d="M36 58 H76 L73 101 Q72 105 67 105 H45 Q40 105 39 101 Z" fill="${color}"/>
+                    <ellipse cx="56" cy="58" rx="20" ry="3" fill="#ffffff" fill-opacity="0.35"/>
+                    ${extra || ''}
+                    <path d="M92 44 q10 -14 14 -26" stroke="#94a3b8" stroke-width="3" fill="none" stroke-linecap="round" stroke-dasharray="1 7"/>
+                </svg>`;
+        }
+
+        const TREND_DRINKS = [
+            {
+                name: 'Iced Americano',
+                desc: 'Kopi hitam dingin yang segar, bikin otak makin fokus!',
+                bg: 'bg-stone-100 border border-stone-300',
+                svg: iceCupSVG('#57331a', '#3b200f')
+            },
+            {
+                name: 'Es Kopi Susu Gula Aren',
+                desc: 'Kopi susu manis legit khas kekinian, mantap!',
+                bg: 'bg-amber-50 border border-amber-200',
+                svg: iceCupSVG('#f5e6c8', '#a0642d')
+            },
+            {
+                name: 'Iced Matcha Latte',
+                desc: 'Matcha creamy hijau segar, juara banget!',
+                bg: 'bg-lime-50 border border-lime-200',
+                svg: iceCupSVG('#f4f9e4', '#8bbd4a')
+            },
+            {
+                name: 'Thai Tea Boba',
+                desc: 'Teh Thailand oranye manis dengan boba kenyal!',
+                bg: 'bg-orange-50 border border-orange-200',
+                svg: iceCupSVG('#fdba74', '#ea7a1a',
+                    '<circle cx="50" cy="98" r="4" fill="#1c1917"/><circle cx="60" cy="100" r="4" fill="#1c1917"/><circle cx="70" cy="98" r="4" fill="#1c1917"/><circle cx="55" cy="93" r="4" fill="#1c1917"/><circle cx="66" cy="93" r="4" fill="#1c1917"/>')
+            },
+            {
+                name: 'Lychee Tea',
+                desc: 'Teh leci dingin yang manis dan wangi!',
+                bg: 'bg-rose-50 border border-rose-200',
+                svg: iceCupSVG('#fecdd3', '#fb9aa8',
+                    '<circle cx="82" cy="58" r="9" fill="#fde2e4" stroke="#fb7185" stroke-width="2"/><circle cx="82" cy="58" r="3.5" fill="#fb7185"/>')
+            },
+            {
+                name: 'Iced Caramel Macchiato',
+                desc: 'Susu, espresso & saus karamel berlapis nikmat!',
+                bg: 'bg-yellow-50 border border-yellow-200',
+                svg: iceCupSVG('#fff1d6', '#8a5a2b',
+                    '<path d="M38 66 Q50 72 60 66 T82 66" stroke="#d97706" stroke-width="3.5" fill="none" stroke-linecap="round"/>')
+            }
+        ];
+
+        const JAMU_DRINKS = [
+            {
+                name: 'Jamu Brotowali',
+                desc: 'Pahit banget! Ayo lebih teliti membagi ya!',
+                bg: 'bg-green-50 border border-green-300',
+                svg: jamuGlassSVG('#4d7c0f',
+                    '<path d="M84 100 Q96 78 108 92 Q98 106 84 100 Z" fill="#65a30d"/><path d="M86 99 Q96 92 106 92" stroke="#3f6212" stroke-width="2" fill="none"/>')
+            },
+            {
+                name: 'Jamu Jahe',
+                desc: 'Hangat dan pedas! Semangat, coba lagi!',
+                bg: 'bg-orange-50 border border-orange-300',
+                svg: jamuGlassSVG('#d99a3d',
+                    '<rect x="82" y="92" width="26" height="12" rx="6" fill="#e5b97a" stroke="#b7791f" stroke-width="2"/><rect x="90" y="82" width="10" height="14" rx="5" fill="#e5b97a" stroke="#b7791f" stroke-width="2"/>')
+            },
+            {
+                name: 'Jamu Kunyit Asam',
+                desc: 'Asam segar! Jangan menyerah, hitung pelan-pelan!',
+                bg: 'bg-yellow-50 border border-yellow-300',
+                svg: jamuGlassSVG('#f59e0b',
+                    '<rect x="82" y="92" width="28" height="12" rx="6" fill="#ea8a0c" stroke="#b45309" stroke-width="2"/><rect x="88" y="84" width="10" height="12" rx="5" fill="#ea8a0c" stroke="#b45309" stroke-width="2"/>')
+            },
+            {
+                name: 'Jamu Beras Kencur',
+                desc: 'Rasanya khas banget! Ayo coba soal berikutnya!',
+                bg: 'bg-stone-50 border border-stone-300',
+                svg: jamuGlassSVG('#e8d9b5',
+                    '<circle cx="90" cy="98" r="4" fill="#f5efe0" stroke="#a8956a" stroke-width="1.5"/><circle cx="100" cy="102" r="4" fill="#f5efe0" stroke="#a8956a" stroke-width="1.5"/><circle cx="98" cy="92" r="4" fill="#f5efe0" stroke="#a8956a" stroke-width="1.5"/>')
+            },
+            {
+                name: 'Jamu Temulawak',
+                desc: 'Pahit menyehatkan! Fokus lagi di soal berikutnya!',
+                bg: 'bg-amber-50 border border-amber-300',
+                svg: jamuGlassSVG('#c2620f',
+                    '<rect x="82" y="92" width="28" height="12" rx="6" fill="#d97706" stroke="#92400e" stroke-width="2"/><rect x="92" y="83" width="10" height="13" rx="5" fill="#d97706" stroke="#92400e" stroke-width="2"/>')
+            },
+            {
+                name: 'Jamu Sinom',
+                desc: 'Asam manis hangat! Tetap semangat membagi!',
+                bg: 'bg-lime-50 border border-lime-300',
+                svg: jamuGlassSVG('#b5a642',
+                    '<path d="M84 100 Q94 80 106 90 Q98 104 84 100 Z" fill="#84cc16"/>')
+            }
+        ];
+
         // --- Quotes Motivasi Acak ---
         const MOTIVATION_QUOTES = [
             { text: "Matematika bukan tentang angka, persamaan, atau algoritma: ini adalah tentang pemahaman.", author: "William Paul Thurston" },
@@ -721,51 +887,66 @@
             { text: "Otak yang terlatih menghitung cepat akan selalu siap menghadapi tantangan masa depan.", author: "Semangat Kota Hujan" }
         ];
 
-        // --- Karakter Anak Perempuan (Benar) & Anak Laki-laki (Salah) ---
+        // --- Ilustrasi SVG Karakter Anak Perempuan Berkerudung Putih Rapi (Benar) & Anak Laki-laki Bertopi SMK (Salah) ---
         const GIRL_CHEER_SVG = `<svg viewBox="0 0 100 120" class="w-full h-full animate-girl-cheer">
+            <!-- Baju Seragam Putih & Dasi Abu-abu SMK -->
             <path d="M26 74 L74 74 L78 108 L22 108 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
             <polygon points="50,82 46,98 50,103 54,98" fill="#64748b"/>
+            <!-- Tangan Mengangkat Ceria -->
             <path d="M28 80 L13 56" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
             <path d="M28 80 L13 56" stroke="#cbd5e1" stroke-width="1.2" fill="none" stroke-linecap="round"/>
             <circle cx="13" cy="56" r="4" fill="#fed7aa"/>
             <path d="M72 80 L87 56" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
             <path d="M72 80 L87 56" stroke="#cbd5e1" stroke-width="1.2" fill="none" stroke-linecap="round"/>
             <circle cx="87" cy="56" r="4" fill="#fed7aa"/>
+            <!-- Kerudung Putih Sekolah Rapi (Menutup Dada Simetris) -->
             <path d="M24 46 C24 19 76 19 76 46 L84 82 Q50 93 16 82 Z" fill="#ffffff" stroke="#94a3b8" stroke-width="2"/>
+            <!-- Inner Ciput Putih Rapi di Dahi -->
             <path d="M30 43 C32 27 68 27 70 43" fill="#e2e8f0"/>
+            <!-- Wajah Bulat Menggemaskan -->
             <circle cx="50" cy="48" r="20" fill="#fed7aa"/>
+            <!-- Bingkai & Lipatan Dagu Kerudung Putih yang Rapi -->
             <path d="M30 44 C30 26 70 26 70 44 C70 60 61 68 50 68 C39 68 30 60 30 44 Z" fill="none" stroke="#cbd5e1" stroke-width="2.5"/>
             <path d="M41 66 L50 71 L59 66" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round"/>
+            <!-- Mata Berbinar & Pipi Merona -->
             <path d="M39 45 Q42.5 39 46 45" stroke="#1e293b" stroke-width="2.8" fill="none" stroke-linecap="round"/>
             <path d="M54 45 Q57.5 39 61 45" stroke="#1e293b" stroke-width="2.8" fill="none" stroke-linecap="round"/>
             <circle cx="37" cy="51" r="3" fill="#fb7185" opacity="0.55"/>
             <circle cx="63" cy="51" r="3" fill="#fb7185" opacity="0.55"/>
+            <!-- Mulut Teriak Yuuhuuu -->
             <ellipse cx="50" cy="56" rx="5" ry="6" fill="#e11d48"/>
         </svg>`;
 
         const BOY_CRY_SVG = `<svg viewBox="0 0 100 120" class="w-full h-full animate-boy-cry">
+            <!-- Baju Seragam Putih & Dasi Abu-abu SMK -->
             <path d="M30 76 L70 76 L74 108 L26 108 Z" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
             <polygon points="50,76 46,96 50,101 54,96" fill="#475569"/>
+            <!-- Tangan Mengusap Mata -->
             <path d="M30 82 L35 58" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
             <circle cx="35" cy="58" r="4" fill="#fed7aa"/>
             <path d="M70 82 L65 58" stroke="#ffffff" stroke-width="8" stroke-linecap="round"/>
             <circle cx="65" cy="58" r="4" fill="#fed7aa"/>
+            <!-- Kepala -->
             <circle cx="50" cy="50" r="23" fill="#fed7aa"/>
+            <!-- Rambut Samping -->
             <path d="M27 44 L29 52 L32 44 Z" fill="#1e293b"/>
             <path d="M73 44 L71 52 L68 44 Z" fill="#1e293b"/>
+            <!-- Topi Sekolah SMK (Abu-abu & Putih + Pet Topi) -->
             <path d="M26 38 C26 19 74 19 74 38 Z" fill="#64748b"/>
             <path d="M40 38 C40 21 60 21 60 38 Z" fill="#f8fafc"/>
             <rect x="44" y="27" width="12" height="6" rx="1.5" fill="#334155"/>
             <path d="M24 38 Q50 43 76 38 L79 42 Q50 48 21 42 Z" fill="#475569"/>
+            <!-- Mata Sedih & Air Mata Mengalir -->
             <path d="M36 47 L45 51" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
             <path d="M64 47 L55 51" stroke="#1e293b" stroke-width="3" stroke-linecap="round"/>
             <path d="M38 53 L34 70" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round"/>
             <path d="M62 53 L66 70" stroke="#38bdf8" stroke-width="3.5" stroke-linecap="round"/>
+            <!-- Mulut Teriak Hiihuu -->
             <path d="M42 64 Q50 56 58 64 Q50 68 42 64 Z" fill="#be123c"/>
         </svg>`;
 
         // --- Variabel State Permainan & Audio ---
-        let selectedMode = 'multiply';
+        let selectedMode = 'multiply'; // 'multiply' (Perkalian) atau 'divide' (Pembagian)
         let currentPlayer = { name: '', className: '' };
         let currentFactorA = 2;
         let currentFactorB = 2;
@@ -839,11 +1020,11 @@
             const btn = document.getElementById('soundToggleBtn');
             if (isAudioMuted) {
                 icon.className = 'fa-solid fa-volume-xmark text-xs';
-                btn.className = 'bg-slate-600 hover:bg-slate-500 text-slate-200 w-8 h-8 rounded-xl flex items-center justify-center transition shadow';
+                btn.className = 'bg-slate-600 hover:bg-slate-500 text-slate-200 w-9 h-9 rounded-xl flex items-center justify-center transition shadow';
                 stopBgmLoop();
             } else {
                 icon.className = 'fa-solid fa-volume-high text-xs';
-                btn.className = 'bg-sky-600/90 hover:bg-sky-500 text-white w-8 h-8 rounded-xl flex items-center justify-center transition shadow';
+                btn.className = 'bg-sky-600/90 hover:bg-sky-500 text-white w-9 h-9 rounded-xl flex items-center justify-center transition shadow';
                 if (!document.getElementById('gameScreen').classList.contains('hidden') && !isGamePaused) {
                     initAudioContext();
                     startBgmLoop();
@@ -863,6 +1044,7 @@
                 if (isAudioMuted || isGamePaused || document.getElementById('gameScreen').classList.contains('hidden')) return;
                 const idx = bgmStepIndex % melodyNotes.length;
                 const baseFreq = melodyNotes[idx];
+                // Lapisan melodi utama + oktaf atas agar terdengar jelas & nyaring di speaker HP
                 playToneNote(baseFreq, 0.22, 'triangle', 0.52, 0);
                 playToneNote(baseFreq * 2, 0.16, 'sine', 0.28, 0);
                 bgmStepIndex++;
@@ -934,7 +1116,7 @@
             playClapBurst(0.7);
         }
 
-        // --- Format Kelas: contoh X-1 / X-A ---
+        // --- Format Kelas: [angka romawi]-[angka biasa ATAU 1 huruf kapital], contoh X-1 / X-A ---
         function formatClassInput(value) {
             const v = String(value).toUpperCase().replace(/[^A-Z0-9-]/g, '');
             const m = v.match(/^([IVX]*)(-?)(.*)$/);
@@ -949,7 +1131,7 @@
             return suffix ? `${roman}-${suffix}` : (hasHyphen ? roman + '-' : roman);
         }
 
-        // --- Pemilihan Mode ---
+        // --- Pemilihan Mode Perkalian / Pembagian ---
         function selectOperationMode(mode) {
             selectedMode = mode;
             const btnMul = document.getElementById('modeBtnMultiply');
@@ -1018,7 +1200,7 @@
             generateNextQuestion();
         }
 
-        // --- Kontrol Jeda & Ulang ---
+        // --- Kontrol Jeda (Pause/Lanjut) & Ulang Permainan ---
         function updatePauseUI() {
             const pauseIcon = document.getElementById('pauseToggleIcon');
             const pauseBtn = document.getElementById('pauseToggleBtn');
@@ -1027,11 +1209,11 @@
 
             if (isGamePaused) {
                 pauseIcon.className = 'fa-solid fa-play text-xs';
-                pauseBtn.className = 'bg-emerald-500 hover:bg-emerald-400 text-white w-8 h-8 rounded-xl flex items-center justify-center transition shadow';
+                pauseBtn.className = 'bg-emerald-500 hover:bg-emerald-400 text-white w-9 h-9 rounded-xl flex items-center justify-center transition shadow';
                 pauseOverlay.classList.remove('hidden');
             } else {
                 pauseIcon.className = 'fa-solid fa-pause text-xs';
-                pauseBtn.className = 'bg-amber-500/90 hover:bg-amber-400 text-slate-900 w-8 h-8 rounded-xl flex items-center justify-center transition shadow';
+                pauseBtn.className = 'bg-amber-500/90 hover:bg-amber-400 text-slate-900 w-9 h-9 rounded-xl flex items-center justify-center transition shadow';
                 pauseOverlay.classList.add('hidden');
             }
         }
@@ -1068,6 +1250,7 @@
             clearTimeout(popupTimeout);
             document.getElementById('feedbackPopupModal').classList.add('hidden');
 
+            // Reset tanpa menyimpan progres yang belum selesai ke data siswa/guru
             scoreCorrect = 0;
             scoreWrong = 0;
             totalTimeLeft = GAME_DURATION_SECONDS;
@@ -1102,6 +1285,7 @@
         }
 
         function executeStopGameEarly() {
+            // Hentikan permainan tanpa menyimpan skor ke riwayat siswa maupun data guru
             clearInterval(gameTimerInterval);
             clearInterval(questionTimerInterval);
             clearTimeout(popupTimeout);
@@ -1195,6 +1379,26 @@
         }
 
         let lastSubmitTimestamp = 0;
+        // Tombol keypad bereaksi saat disentuh (pointerdown), bukan menunggu jari diangkat
+        let fastFiring = false;
+        document.addEventListener('pointerdown', function (e) {
+            if (e.button !== undefined && e.button !== 0) return;
+            const b = e.target.closest && e.target.closest('button[data-fast]');
+            if (!b || b.disabled) return;
+            b._fastAt = Date.now();
+            fastFiring = true;
+            try { b.click(); } finally { fastFiring = false; }
+        }, true);
+        document.addEventListener('click', function (e) {
+            if (fastFiring) return; // klik buatan dari pointerdown: biarkan jalan
+            const b = e.target.closest && e.target.closest('button[data-fast]');
+            if (!b || !b._fastAt) return;
+            // klik "susulan" dari sentuhan yang sama diabaikan; Enter/Spasi di keyboard (detail=0) tetap jalan
+            if (e.detail !== 0 && Date.now() - b._fastAt < 1000) {
+                e.stopImmediatePropagation(); e.preventDefault();
+            }
+        }, true);
+
         function handleFastSubmit(e) {
             if (e) e.preventDefault();
             submitAnswer();
@@ -1251,6 +1455,7 @@
             currentInput = '';
             updateAnswerDisplay();
 
+            // Perkalian dan pembagian dasar angka 2 sampai 9
             const a = Math.floor(Math.random() * 8) + 2; // 2..9
             const b = Math.floor(Math.random() * 8) + 2; // 2..9
 
@@ -1307,10 +1512,12 @@
             const answerValue = document.getElementById('feedbackAnswerValue');
 
             if (isCorrect) {
-                const food = BOGOR_FOODS[Math.floor(Math.random() * BOGOR_FOODS.length)];
+                const isDivide = selectedMode === 'divide';
+                const foodList = isDivide ? TREND_DRINKS : BOGOR_FOODS;
+                const food = foodList[Math.floor(Math.random() * foodList.length)];
                 card.className = 'w-full max-w-xs bg-white rounded-3xl shadow-2xl border-4 border-emerald-400 p-5 text-center';
                 badge.className = 'inline-block px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider mb-3 bg-emerald-100 text-emerald-800';
-                badge.textContent = 'JAWABAN BENAR • KULINER BOGOR';
+                badge.textContent = isDivide ? 'JAWABAN BENAR • MINUMAN KEKINIAN' : 'JAWABAN BENAR • KULINER BOGOR';
                 charContainer.innerHTML = GIRL_CHEER_SVG;
                 visualContainer.className = `w-28 h-28 shrink-0 rounded-2xl flex items-center justify-center p-2 ${food.bg}`;
                 visualContainer.innerHTML = food.svg;
@@ -1320,10 +1527,13 @@
                 answerValue.className = 'font-mono-calc text-base font-extrabold text-emerald-800 bg-emerald-50 border border-emerald-200 px-3 py-1 rounded-xl inline-block mt-1';
                 answerValue.textContent = `${currentFactorA} ${currentOperatorSymbol} ${currentFactorB} = ${currentAnswer}`;
             } else {
-                const disaster = BOGOR_DISASTERS[Math.floor(Math.random() * BOGOR_DISASTERS.length)];
+                const isDivide = selectedMode === 'divide';
+                const disasterList = isDivide ? JAMU_DRINKS : BOGOR_DISASTERS;
+                const disaster = disasterList[Math.floor(Math.random() * disasterList.length)];
                 card.className = 'w-full max-w-xs bg-white rounded-3xl shadow-2xl border-4 border-rose-400 p-5 text-center';
                 badge.className = 'inline-block px-3 py-1 rounded-full text-[11px] font-extrabold uppercase tracking-wider mb-3 bg-rose-100 text-rose-800';
-                badge.textContent = isTimeout ? 'WAKTU HABIS • BENCANA BOGOR' : 'JAWABAN SALAH • BENCANA BOGOR';
+                const lossTag = isDivide ? 'MINUM JAMU' : 'BENCANA BOGOR';
+                badge.textContent = isTimeout ? `WAKTU HABIS • ${lossTag}` : `JAWABAN SALAH • ${lossTag}`;
                 charContainer.innerHTML = BOY_CRY_SVG;
                 visualContainer.className = `w-28 h-28 shrink-0 rounded-2xl flex items-center justify-center p-2 ${disaster.bg}`;
                 visualContainer.innerHTML = disaster.svg;
@@ -1350,6 +1560,7 @@
         }
 
         function finishGame() {
+            // Hanya menyimpan & menampilkan penghargaan jika permainan benar-benar selesai sampai akhir
             if (totalTimeLeft > 0) return;
 
             clearInterval(gameTimerInterval);
@@ -1416,11 +1627,13 @@
         }
 
         // --- Penyimpanan di Google Sheet (via Apps Script) ---
-        let publicRecords = [];
-        let teacherRecords = [];
-        let pendingRecords = [];
-        let teacherToken = null;
-        let myServerRecords = [];
+        let publicRecords = [];    // papan skor publik dari server (tanpa riwayat)
+        let teacherRecords = [];   // seluruh riwayat, hanya terisi setelah guru login
+        let pendingRecords = [];   // nilai yang belum sukses terkirim ke server
+        let teacherLoading = false;
+        let teacherFetching = false;
+        let teacherToken = null;     // token login guru (tidak menyimpan sandi), tersimpan di perangkat guru
+        let myServerRecords = [];    // riwayat perangkat ini yang tersimpan di server
         let skipMyFetch = false;
 
         function safeGet(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
@@ -1429,6 +1642,7 @@
 
         teacherToken = safeGet('teacher_token_v1');
 
+        // ID perangkat acak: menghubungkan riwayat ke perangkat ini, tidak pernah tampil di papan skor
         let memDeviceId = null;
         function getDeviceId() {
             let id = safeGet('device_id_v1') || memDeviceId;
@@ -1441,7 +1655,7 @@
             return id;
         }
 
-        function getAllRecords() { return teacherRecords; }
+        function getAllRecords() { return teacherRecords; } // dipakai panel guru
 
         function saveRecord(record) {
             record.deviceId = getDeviceId();
@@ -1449,6 +1663,7 @@
             sendPendingRecords();
         }
 
+        // Riwayat yang tersimpan permanen di server, dicari lewat nama + kelas
         function fetchMyRecords() {
             const ident = getHistoryIdentity();
             if (!ident) return;
@@ -1500,7 +1715,7 @@
                     })
                     .catch(() => {
                         rec._sending = false;
-                        setTimeout(sendPendingRecords, 3000);
+                        setTimeout(sendPendingRecords, 3000); // coba lagi otomatis
                     });
             });
         }
@@ -1509,31 +1724,40 @@
             return !document.getElementById('teacherDashboardSection').classList.contains('hidden');
         }
 
-        function serverErrorMessage() {
-            return API_URL
-                ? 'Tidak bisa terhubung ke server. Cek koneksi & deployment (akses: Anyone).'
-                : 'Alamat server belum diisi (API_URL_MANUAL).';
-        }
-
+        // Guru yang sedang membuka panel -> ambil seluruh riwayat; selain itu -> papan skor publik
         function fetchRecordsFromServer(manual) {
-            if (!API_URL) {
-                if (manual || !serverErrorShown) {
-                    serverErrorShown = true;
-                    showToast(serverErrorMessage(), 'error');
-                }
-                return;
-            }
             if (isTeacherPanelOpen() && teacherToken) {
+                if (teacherFetching) return;
+                teacherFetching = true;
+                if (manual || getAllRecords().length === 0) setTeacherLoading(true);
                 apiPost({ action: 'teacher', token: teacherToken })
                     .then(res => {
-                        if (!res || !res.ok) { teacherToken = null; safeDel('teacher_token_v1'); closeTeacherDashboard(); showToast('Sesi guru berakhir, silakan login lagi.', 'info'); return; }
+                        teacherFetching = false;
+                        setTeacherLoading(false);
+                        if (!res || !res.ok) {
+                            if (res && res.error === 'auth') {
+                                teacherToken = null; safeDel('teacher_token_v1'); safeDel('teacher_cache_v1');
+                                closeTeacherDashboard();
+                                showToast('Sesi guru berakhir, silakan login lagi.', 'info');
+                                showTeacherLoginForm();
+                            } else {
+                                renderTeacherTable();
+                                showToast('Gagal membaca data: ' + ((res && res.error) || 'server tidak merespons'), 'error');
+                            }
+                            return;
+                        }
                         teacherRecords = res.records || [];
+                        saveTeacherCache();
+                        if (res.sheetError) showToast('Sheet tidak bisa dibaca: ' + res.sheetError, 'error');
                         syncTeacherDataAutomatically();
                         if (manual) showToast('Data siswa berhasil diperbarui!', 'success');
                     })
                     .catch(() => {
+                        teacherFetching = false;
+                        setTeacherLoading(false);
+                        renderTeacherTable();
                         if (manual) showToast('Gagal mengambil data dari server.', 'error');
-                        else if (!serverErrorShown) { serverErrorShown = true; showToast(serverErrorMessage(), 'error'); }
+                        else if (!serverErrorShown) { serverErrorShown = true; showToast((API_URL && API_URL.indexOf('https://') === 0) ? 'Tidak bisa terhubung ke server. Cek koneksi & deployment (akses: Anyone).' : 'Alamat server belum diisi di Index.html (baris API_URL).', 'error'); }
                     });
                 return;
             }
@@ -1549,11 +1773,11 @@
                 })
                 .catch(() => {
                     if (manual) showToast('Gagal mengambil data dari server.', 'error');
-                    else if (!serverErrorShown) { serverErrorShown = true; showToast(serverErrorMessage(), 'error'); }
+                    else if (!serverErrorShown) { serverErrorShown = true; showToast((API_URL && API_URL.indexOf('https://') === 0) ? 'Tidak bisa terhubung ke server. Cek koneksi & deployment (akses: Anyone).' : 'Alamat server belum diisi di Index.html (baris API_URL).', 'error'); }
                 });
         }
 
-        // Papan skor: nama + kelas sama -> hanya poin tertinggi
+        // Papan skor: nama + kelas sama -> hanya poin tertinggi. Nama sama beda kelas -> keduanya tampil.
         function classKey(r) {
             return String(r.name || '').trim().toLowerCase() + '|' + String(r.className || '').trim().toUpperCase();
         }
@@ -1623,7 +1847,7 @@
             `).join('');
         }
 
-        // --- Modal Ranking & Riwayat ---
+        // --- Modal Ranking 1-10 & Riwayat ---
         function openHistoryModal(tab = 'ranking') {
             document.getElementById('historyModal').classList.remove('hidden');
             switchHistoryTab(tab);
@@ -1703,21 +1927,25 @@
             }
         }
 
-        // --- Login & Panel Khusus Guru ---
+        // --- Login & Panel Khusus Guru (Halaman Penuh) ---
+        function loadTeacherCache() {
+            try { const c = JSON.parse(safeGet('teacher_cache_v1') || '[]'); return Array.isArray(c) ? c : []; }
+            catch (e) { return []; }
+        }
+        function saveTeacherCache() {
+            try { safeSet('teacher_cache_v1', JSON.stringify(teacherRecords)); } catch (e) {}
+        }
+        function setTeacherLoading(on) {
+            teacherLoading = on;
+            const icon = document.getElementById('teacherRefreshIcon');
+            if (icon) icon.classList.toggle('fa-spin', on);
+        }
+
         function openTeacherLoginModal() {
             if (teacherToken) {
-                apiPost({ action: 'teacher', token: teacherToken })
-                    .then(res => {
-                        if (res && res.ok) {
-                            teacherRecords = res.records || [];
-                            openTeacherDashboard();
-                        } else {
-                            teacherToken = null;
-                            safeDel('teacher_token_v1');
-                            showTeacherLoginForm();
-                        }
-                    })
-                    .catch(() => showTeacherLoginForm());
+                // Langsung tampil dari data tersimpan, lalu diperbarui diam-diam dari server
+                teacherRecords = loadTeacherCache();
+                openTeacherDashboard();
                 return;
             }
             showTeacherLoginForm();
@@ -1726,6 +1954,7 @@
         function logoutTeacher() {
             teacherToken = null;
             safeDel('teacher_token_v1');
+            safeDel('teacher_cache_v1');
             closeTeacherDashboard();
             showToast('Berhasil keluar dari akun guru.', 'info');
         }
@@ -1754,23 +1983,36 @@
         }
 
         function verifyTeacherLogin() {
+            const btn = document.getElementById('teacherLoginBtn');
+            if (btn && btn.disabled) return;
             const pwd = document.getElementById('teacherPasswordInput').value;
+            const label = btn ? btn.innerHTML : '';
+            const done = () => { if (btn) { btn.disabled = false; btn.innerHTML = label; } };
+            if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Memeriksa...'; }
+            document.getElementById('teacherLoginError').classList.add('hidden');
             apiPost({ action: 'teacher', password: pwd })
                 .then(res => {
+                    done();
                     if (res && res.ok) {
                         teacherToken = res.token || null;
                         if (teacherToken) safeSet('teacher_token_v1', teacherToken);
                         teacherRecords = res.records || [];
+                        saveTeacherCache();
                         closeTeacherLoginModal();
-                        openTeacherDashboard();
+                        openTeacherDashboard(true); // data baru saja dimuat, tidak perlu ambil ulang
+                        if (res.sheetError) showToast('Sandi benar, tetapi sheet tidak bisa dibaca: ' + res.sheetError, 'error');
                     } else {
+                        const t = document.getElementById('teacherLoginErrorText');
+                        if (t) t.textContent = (res && res.error && res.error !== 'auth')
+                            ? 'Server bermasalah: ' + res.error
+                            : 'Kata sandi salah! Silakan coba lagi.';
                         document.getElementById('teacherLoginError').classList.remove('hidden');
                     }
                 })
-                .catch(() => showToast('Gagal terhubung ke server.', 'error'));
+                .catch(() => { done(); showToast('Gagal terhubung ke server. Pastikan deployment akses: Anyone dan sudah New version.', 'error'); });
         }
 
-        function openTeacherDashboard() {
+        function openTeacherDashboard(skipFetch) {
             clearInterval(gameTimerInterval);
             clearInterval(questionTimerInterval);
             clearTimeout(popupTimeout);
@@ -1782,12 +2024,14 @@
             populateTeacherDateFilter();
             renderTeacherTable();
 
+            // Tampilkan sebagai halaman penuh di layar utama (bukan pop-up)
             document.getElementById('startScreen').classList.add('hidden');
             document.getElementById('gameScreen').classList.add('hidden');
             document.getElementById('awardScreen').classList.add('hidden');
             document.getElementById('teacherDashboardSection').classList.remove('hidden');
+            window.scrollTo(0, 0);
 
-            fetchRecordsFromServer(false);
+            if (!skipFetch) { setTeacherLoading(true); renderTeacherTable(); fetchRecordsFromServer(false); }
         }
 
         function syncTeacherDataAutomatically() {
@@ -1801,12 +2045,9 @@
         }
 
         function refreshTeacherDashboardData() {
-            const icon = document.getElementById('teacherRefreshIcon');
-            if (icon) icon.classList.add('fa-spin');
+            if (teacherFetching) return;
+            setTeacherLoading(true);
             fetchRecordsFromServer(true);
-            setTimeout(() => {
-                if (icon) icon.classList.remove('fa-spin');
-            }, 600);
         }
 
         function closeTeacherDashboard() {
@@ -1896,7 +2137,10 @@
             document.getElementById('teacherHighestScore').textContent = highestScore;
 
             if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400 font-semibold">Tidak ada data siswa yang sesuai filter.</td></tr>`;
+                const loadingNow = teacherLoading && getAllRecords().length === 0;
+                tbody.innerHTML = loadingNow
+                    ? `<tr><td colspan="7" class="py-10 text-center text-slate-500 font-bold"><i class="fa-solid fa-spinner fa-spin mr-2"></i>Memuat data siswa...</td></tr>`
+                    : `<tr><td colspan="7" class="py-8 text-center text-slate-400 font-semibold">Tidak ada data siswa yang sesuai filter.</td></tr>`;
                 return;
             }
 
@@ -1969,6 +2213,7 @@
                     document.getElementById('confirmResetBanner').classList.add('hidden');
                     if (res && res.ok) {
                         teacherRecords = [];
+                        saveTeacherCache();
                         publicRecords = [];
                         pendingRecords = [];
                         myServerRecords = [];
@@ -2011,12 +2256,11 @@
             fetchRecordsFromServer(false);
         });
 
-        // Guru: tiap 5 detik. Beranda: tiap 15 detik. Dihentikan saat siswa bermain.
+        // Guru: diperbarui tiap 5 detik langsung dari sheet. Beranda: tiap 15 detik. Dihentikan saat siswa sedang bermain.
         let pollCount = 0;
         setInterval(() => {
             if (document.hidden) return;
             if (!document.getElementById('gameScreen').classList.contains('hidden')) return;
-            if (!API_URL) return;
             pollCount++;
             const teacherOpen = isTeacherPanelOpen();
             if (teacherOpen || pollCount % 3 === 0) fetchRecordsFromServer(false);
